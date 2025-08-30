@@ -96,11 +96,15 @@
     }
 
     #linkConvite {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
       color: var(--text-light);
-      word-break: break-all;
       text-decoration: none;
+      max-width: 220px;          /* limite do link */
+      overflow: hidden;
+      text-overflow: ellipsis;   /* mostra "..." */
+      white-space: nowrap;
+      display: inline-block;
     }
 
     #linkConvite:hover {
@@ -109,17 +113,17 @@
     }
 
     .copy-btn {
-      padding: 6px 10px;         /* menor */
+      padding: 6px 10px;
       background: var(--primary);
-      color: #fff;               /* letras brancas */
+      color: #fff;
       border: none;
       border-radius: 6px;
       cursor: pointer;
       font-weight: 600;
       transition: all 0.2s ease;
-      font-size: 12px;           /* mais compacto */
-      line-height: 1;            /* corrige altura */
-      white-space: nowrap;       /* impede quebra */
+      font-size: 12px;
+      line-height: 1;
+      white-space: nowrap;
     }
 
     .copy-btn:hover {
@@ -222,7 +226,7 @@
   <div class="convite-section">
     <div>Seu link exclusivo:</div>
     <div class="convite-box">
-      <a href="#" id="linkConvite" target="_blank">Carregando...</a>
+      <a href="#" id="linkConvite" target="_blank" title="Carregando...">Carregando...</a>
       <button class="copy-btn" onclick="copiarLink()">Copiar</button>
     </div>
   </div>
@@ -286,6 +290,7 @@
       const linkElement = document.getElementById("linkConvite");
       linkElement.textContent = link;
       linkElement.href = link;
+      linkElement.title = link; // mostra link completo no hover
     });
 
     window.copiarLink = function () {
