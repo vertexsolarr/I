@@ -249,7 +249,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+    import { getDatabase } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
     const firebaseConfig = {
@@ -263,19 +263,20 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
     const auth = getAuth(app);
 
     onAuthStateChanged(auth, user => {
       if (!user) {
         alert("Sessão expirada. Faça login novamente.");
-        window.location.href = "index.html";
+        // Corrigido para apontar para a pasta /I/ no GitHub Pages
+        window.location.href = "./index.html";
         return;
       }
 
       const uid = user.uid;
       const conviteCurto = uid.slice(-6);
-      const link = `${window.location.origin}/login.index.html?ref=${conviteCurto}`;
+      // Corrigido: agora aponta para /I/login.index.html
+      const link = `${window.location.origin}/I/login.index.html?ref=${conviteCurto}`;
       document.getElementById("linkConvite").textContent = link;
     });
 
