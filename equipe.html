@@ -81,7 +81,7 @@
 
     .convite-box {
       background-color: #1c1c1c;
-      padding: 16px 18px;
+      padding: 10px 14px;
       border-radius: 12px;
       display: inline-flex;
       align-items: center;
@@ -92,11 +92,11 @@
       border: 1px solid var(--primary);
       color: var(--primary);
       max-width: 100%;
-      gap: 14px;
+      gap: 10px;
     }
 
     #linkConvite {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 600;
       color: var(--text-light);
       word-break: break-all;
@@ -109,15 +109,17 @@
     }
 
     .copy-btn {
-      padding: 8px 14px;
+      padding: 6px 10px;         /* menor */
       background: var(--primary);
-      color: #000;
+      color: #fff;               /* letras brancas */
       border: none;
-      border-radius: 8px;
+      border-radius: 6px;
       cursor: pointer;
       font-weight: 600;
       transition: all 0.2s ease;
-      font-size: 13px;
+      font-size: 12px;           /* mais compacto */
+      line-height: 1;            /* corrige altura */
+      white-space: nowrap;       /* impede quebra */
     }
 
     .copy-btn:hover {
