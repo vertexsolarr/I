@@ -80,29 +80,36 @@
     }
 
     .convite-box {
-      background-color: #111;
-      padding: 14px 16px;
-      border-radius: 10px;
+      background-color: #1c1c1c;
+      padding: 16px 18px;
+      border-radius: 12px;
       display: inline-flex;
       align-items: center;
       justify-content: space-between;
       word-break: break-word;
-      margin-top: 12px;
+      margin-top: 14px;
       box-shadow: var(--shadow);
-      border: 1px solid rgba(212, 175, 55, 0.4);
+      border: 1px solid var(--primary);
       color: var(--primary);
       max-width: 100%;
-      gap: 10px;
+      gap: 14px;
     }
 
-    /* ✅ Ajuste no tamanho do link */
     #linkConvite {
-      font-size: 13px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-light);
       word-break: break-all;
+      text-decoration: none;
+    }
+
+    #linkConvite:hover {
+      text-decoration: underline;
+      color: var(--primary);
     }
 
     .copy-btn {
-      padding: 7px 7px;
+      padding: 8px 14px;
       background: var(--primary);
       color: #000;
       border: none;
@@ -110,7 +117,7 @@
       cursor: pointer;
       font-weight: 600;
       transition: all 0.2s ease;
-      font-size: 7px;
+      font-size: 13px;
     }
 
     .copy-btn:hover {
@@ -148,7 +155,6 @@
       background-color: rgba(212, 175, 55, 0.08);
     }
 
-    /* Caixa profissional para comissão */
     .bonus-info {
       margin-top: 35px;
       display: grid;
@@ -192,11 +198,6 @@
       from {transform: translateY(20px); opacity: 0;}
       to {transform: translateY(0); opacity: 1;}
     }
-
-    @keyframes zoomIn {
-      from {transform: scale(0.8); opacity: 0;}
-      to {transform: scale(1); opacity: 1;}
-    }
   </style>
 </head>
 <body>
@@ -219,7 +220,7 @@
   <div class="convite-section">
     <div>Seu link exclusivo:</div>
     <div class="convite-box">
-      <span id="linkConvite">Carregando...</span>
+      <a href="#" id="linkConvite" target="_blank">Carregando...</a>
       <button class="copy-btn" onclick="copiarLink()">Copiar</button>
     </div>
   </div>
@@ -237,7 +238,6 @@
     <tbody></tbody>
   </table>
 
-  <!-- Nova apresentação da comissão -->
   <div class="bonus-info">
     <div class="bonus-card">
       <h3>🔹 Nível 1</h3>
@@ -255,7 +255,6 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getDatabase } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
     const firebaseConfig = {
@@ -274,16 +273,17 @@
     onAuthStateChanged(auth, user => {
       if (!user) {
         alert("Sessão expirada. Faça login novamente.");
-        // Corrigido para apontar para a pasta /I/ no GitHub Pages
         window.location.href = "./index.html";
         return;
       }
 
       const uid = user.uid;
       const conviteCurto = uid.slice(-6);
-      // Corrigido: agora aponta para /I/login.index.html
       const link = `${window.location.origin}/I/login.index.html?ref=${conviteCurto}`;
-      document.getElementById("linkConvite").textContent = link;
+
+      const linkElement = document.getElementById("linkConvite");
+      linkElement.textContent = link;
+      linkElement.href = link;
     });
 
     window.copiarLink = function () {
