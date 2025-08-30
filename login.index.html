@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VERTEX SOLAR- Cadastro</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    :root{
+      --dourado: #d4af37;
+      --dourado-hover: #b9972d;
+      --azul: #1565c0;
+      --azul-hover: #0d47a1;
+      --branco: #ffffff;
+      --cinza: #f7f7f7;
+      --radius: 18px;
+    }
+
+    *{box-sizing:border-box;}
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--branco);
+      color: #000;
+    }
+
+    /* TOPO */
+    .hero{
+      position: relative;
+      height: 210px;
+      border-bottom-left-radius: var(--radius);
+      border-bottom-right-radius: var(--radius);
+      background: url('topo.jpg') center/cover no-repeat;
+    }
+
+    /* FORM */
+    .wrap{
+      max-width:420px;
+      margin:-26px auto 30px;
+      padding:22px 16px;
+    }
+    .card{
+      background: var(--branco);
+      border-radius:var(--radius);
+      box-shadow:0 6px 24px rgba(0,0,0,.08);
+      padding:26px 20px;
+      border:1px solid #eee;
+    }
+
+    .campo{
+      margin-bottom:20px;
+      position:relative;
+    }
+    .campo label{
+      display:block;
+      font-size:14px;
+      color: var(--azul);
+      margin-bottom:6px;
+      font-weight:bold;
+    }
+    .entrada{
+      width:100%;
+      padding:14px 12px;
+      border:1px solid #ccc;
+      border-radius:12px;
+      font-size:15px;
+      background: var(--cinza);
+      outline:none;
+    }
+    .entrada:focus{border-color: var(--dourado); background:#fff;}
+    .entrada[readonly]{color:#444; font-weight:600;}
+
+    .sem-icone{
+      padding:14px 12px;
+    }
+
+    .telefone-box{
+      display:flex; 
+      align-items:center;
+    }
+    .telefone-prefixo{
+      padding:14px 10px;
+      background:#eee;
+      border:1px solid #ccc;
+      border-radius:12px 0 0 12px;
+      font-weight:bold;
+      font-size:15px;
+    }
+    .telefone-input{
+      flex:1;
+      border:1px solid #ccc;
+      border-left:none;
+      border-radius:0 12px 12px 0;
+      padding:14px 12px;
+      font-size:15px;
+      background: var(--cinza);
+      outline:none;
+    }
+    .telefone-input:focus{border-color: var(--dourado); background:#fff;}
+
+    .botao{
+      width:100%;
+      padding:14px;
+      border:none;
+      border-radius:14px;
+      font-weight:800;
+      font-size:16px;
+      cursor:pointer;
+      transition:0.25s;
+      background: var(--dourado);
+      color: var(--branco);
+    }
+    .botao:hover{background: var(--dourado-hover);}
+
+    .botao-azul{
+      width:100%;
+      padding:14px;
+      border:none;
+      border-radius:14px;
+      font-weight:800;
+      font-size:16px;
+      cursor:pointer;
+      transition:0.25s;
+      background: var(--azul);
+      color: var(--branco);
+    }
+    .botao-azul:hover{background: var(--azul-hover);}
+
+    .botoes{
+      display:grid;
+      gap:12px;
+    }
+
+    .login-link{
+      margin-top:14px;
+      text-align:center;
+      font-size:14px;
+    }
+    .login-link a{
+      color: var(--azul);
+      font-weight:700;
+      text-decoration:none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOPO -->
+  <header class="hero"></header>
+
+  <!-- CADASTRO -->
+  <main class="wrap">
+    <div class="card">
+
+      <div class="campo">
+        <label for="nome">Nome completo</label>
+        <input type="text" id="nome" class="entrada" placeholder="Digite seu nome" required />
+      </div>
+
+      <div class="campo">
+        <label for="telefone">Telefone</label>
+        <div class="telefone-box">
+          <span class="telefone-prefixo">+244</span>
+          <input 
+            type="tel" 
+            id="telefone" 
+            class="telefone-input" 
+            placeholder="9 dígitos"
+            maxlength="9"
+            oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+            required 
+          />
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="senha">Chave de Acesso</label>
+        <input type="password" id="senha" class="entrada sem-icone" placeholder="Digite sua chave de acesso" required />
+      </div>
+
+      <div class="campo">
+        <label for="codigoConvite">Código de convite</label>
+        <input type="text" id="codigoConvite" class="entrada" placeholder="Código de convite" readonly />
+      </div>
+
+      <div class="botoes">
+        <button class="botao" onclick="registrar()">Cadastrar</button>
+        <a href="index.html"><button type="button" class="botao-azul">Já tenho conta</button></a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyChrog4zZNoK8HTMl1MTMD43U7HHxBMtVw",
+      authDomain: "palpite3ad.firebaseapp.com",
+      databaseURL: "https://palpite3ad-default-rtdb.firebaseio.com",
+      projectId: "palpite3ad",
+      storageBucket: "palpite3ad.appspot.com",
+      messagingSenderId: "435372004187",
+      appId: "1:435372004187:web:3b7ee8b621fba094b2407e"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const database = firebase.database();
+
+    let codigoRealCompleto = null;
+
+    // Pega ref da URL e mostra só os 6 primeiros
+    window.onload = function () {
+      const params = new URLSearchParams(window.location.search);
+      const ref = params.get("ref");
+      if (ref) {
+        codigoRealCompleto = ref;
+        document.getElementById("codigoConvite").value = ref.substring(0,6);
+      }
+    };
+
+    function registrar(){
+      const nome = document.getElementById("nome").value.trim();
+      const telefone = document.getElementById("telefone").value.trim();
+      const senha = document.getElementById("senha").value.trim();
+
+      if(!nome || !telefone || !senha){
+        alert("Preencha todos os campos.");
+        return;
+      }
+
+      if(telefone.length !== 9){
+        alert("O telefone deve ter exatamente 9 dígitos.");
+        return;
+      }
+
+      // Agora só salva os 9 dígitos no Firebase
+      const telefone9 = telefone;
+      const emailFalso = telefone9 + "@kerocapital.com"; 
+
+      auth.createUserWithEmailAndPassword(emailFalso, senha)
+        .then(cred=>{
+          const uid = cred.user.uid;
+          const usuario = {
+            nome: nome,
+            telefone: telefone9, // <- apenas os 9 dígitos
+            saldo: 0,
+            codigoConviteCurto: uid.substring(0,6),
+            dataCadastro: new Date().toISOString()
+          };
+          if(codigoRealCompleto){
+            usuario.convidadoPor = codigoRealCompleto;
+          }
+          return database.ref("usuarios/"+uid).set(usuario);
+        })
+        .then(()=>{
+          alert("Conta criada com sucesso!");
+          window.location.href="tela.html";
+        })
+        .catch(err=>{
+          alert("Erro: "+err.message);
+        });
+    }
+  </script>
+</body>
+</html>

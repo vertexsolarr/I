@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Registos de Depósitos</title>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <style>
+    :root {
+      --dourado: #d4af37;
+      --verde: #15803d;
+      --branco: #ffffff;
+      --cinza: #f4f6f3;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--cinza);
+      margin: 0;
+      padding: 15px;
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--dourado);
+      margin-bottom: 20px;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .painel {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    .cartao {
+      background: linear-gradient(135deg, var(--branco), #fffbea);
+      border-radius: 15px;
+      padding: 15px;
+      position: relative;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      overflow: hidden;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .cartao::before {
+      content: "";
+      position: absolute;
+      top: -30px;
+      right: -30px;
+      width: 80px;
+      height: 80px;
+      background: var(--dourado);
+      opacity: 0.15;
+      border-radius: 50%;
+    }
+
+    .topo {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    .status {
+      padding: 4px 10px;
+      border-radius: 15px;
+      font-size: 11px;
+      font-weight: bold;
+      text-transform: uppercase;
+      background: #eee;
+      border: 1px solid transparent;
+    }
+
+    .ok {
+      background: #e7fbe9;
+      color: var(--verde);
+      border-color: var(--verde);
+    }
+
+    .aguardo {
+      background: #fff5d6;
+      color: #9c6f00;
+      border-color: #e6b800;
+    }
+
+    .falhou {
+      background: #fde8e7;
+      color: #b91c1c;
+      border-color: #e63939;
+    }
+
+    /* 🔹 Agora sempre duas colunas */
+    .detalhes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .campo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #ffffffd9;
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid #eee;
+      font-size: 13px;
+    }
+
+    .campo span {
+      font-weight: bold;
+      color: var(--verde);
+      font-size: 14px;
+    }
+
+    .campo small {
+      display: block;
+      font-size: 11px;
+      color: #555;
+      font-weight: 500;
+    }
+
+    .nenhum {
+      text-align: center;
+      font-size: 14px;
+      color: #666;
+      margin-top: 20px;
+    }
+
+    @keyframes fadeIn {
+      from {opacity:0; transform: translateY(10px);}
+      to {opacity:1; transform: translateY(0);}
+    }
+
+    /* Ajustes só para telas bem pequenas */
+    @media (max-width: 350px) {
+      .detalhes {
+        grid-template-columns: 1fr; /* 🔹 Se a tela for MUITO pequena, quebra em 1 coluna */
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📥 Registos de Depósitos</h1>
+  <div class="painel" id="listaDepositos"></div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyChrog4zZNoK8HTMl1MTMD43U7HHxBMtVw",
+      authDomain: "palpite3ad.firebaseapp.com",
+      databaseURL: "https://palpite3ad-default-rtdb.firebaseio.com",
+      projectId: "palpite3ad",
+      storageBucket: "palpite3ad.appspot.com",
+      messagingSenderId: "435372004187",
+      appId: "1:435372004187:android:3b7ee8b621fba094b2407e"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+    function obterClasse(status) {
+      const s = status?.toLowerCase() || "aguardo";
+      if (s === "aprovado") return "ok";
+      if (s === "pendente") return "aguardo";
+      if (s === "rejeitado") return "falhou";
+      return "";
+    }
+
+    function formatarData(ts) {
+      const d = new Date(ts);
+      return d.toLocaleDateString("pt-PT", { day: "2-digit", month: "2-digit", year: "numeric" }) 
+             + " " + d.toLocaleTimeString("pt-PT", { hour: "2-digit", minute: "2-digit" });
+    }
+
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        alert("Sessão expirada, faça login novamente.");
+        window.location.href = "index.html";
+        return;
+      }
+
+      const uid = user.uid;
+      const container = document.getElementById("listaDepositos");
+
+      db.ref("depositosPendentes/" + uid).once("value").then(snapshot => {
+        if (!snapshot.exists()) {
+          container.innerHTML = "<p class='nenhum'>Nenhum depósito registado.</p>";
+          return;
+        }
+
+        let conteudo = "";
+        snapshot.forEach(child => {
+          const val = child.val();
+          conteudo += `
+            <div class="cartao">
+              <div class="topo">
+                <div>💵 Depósito</div>
+                <div class="status ${obterClasse(val.status)}">${val.status || "Aguardo"}</div>
+              </div>
+              <div class="detalhes">
+                <div class="campo">💰 <div><span>Kz ${parseFloat(val.valor).toLocaleString("pt-AO", {minimumFractionDigits: 2})}</span><small>Montante</small></div></div>
+                <div class="campo">📅 <div><span>${formatarData(val.data || val.timestamp)}</span><small>Momento</small></div></div>
+              </div>
+            </div>
+          `;
+        });
+
+        container.innerHTML = conteudo || "<p class='nenhum'>Ainda não realizou depósitos.</p>";
+      });
+    });
+  </script>
+</body>
+</html>

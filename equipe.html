@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rede Premium - Smart Invest</title>
+  <style>
+    :root {
+      --primary: #d4af37; /* dourado */
+      --bg: #0e0e0e; /* preto elegante */
+      --card-bg: #1a1a1a;
+      --text-light: #fff;
+      --text-muted: #cfcfcf;
+      --shadow: 0 6px 18px rgba(0,0,0,0.6);
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      margin: 0;
+      padding: 20px;
+      color: var(--text-light);
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    h2 {
+      text-align: center;
+      color: var(--primary);
+      margin-bottom: 20px;
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .info-panel {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 25px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      text-align: center;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+    }
+
+    .card.unico {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    .card.unico .coluna {
+      flex: 1;
+      text-align: center;
+      min-width: 120px;
+    }
+
+    .card-title {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      letter-spacing: .5px;
+    }
+
+    .card-value {
+      font-size: 22px;
+      font-weight: bold;
+      color: var(--primary);
+    }
+
+    .convite-section {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .convite-box {
+      background-color: #111;
+      padding: 14px 16px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      word-break: break-word;
+      margin-top: 12px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      color: var(--primary);
+      max-width: 100%;
+      gap: 10px;
+    }
+
+    .copy-btn {
+      padding: 6px 14px;
+      background: var(--primary);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      font-size: 13px;
+    }
+
+    .copy-btn:hover {
+      background: #b89528;
+      color: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      animation: slideUp 0.6s ease;
+    }
+
+    th, td {
+      padding: 14px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      text-align: center;
+      font-size: 14px;
+    }
+
+    th {
+      background-color: var(--primary);
+      color: #000;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 13px;
+    }
+
+    tr:hover td {
+      background-color: rgba(212, 175, 55, 0.08);
+    }
+
+    /* Caixa profissional para comissão */
+    .bonus-info {
+      margin-top: 35px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 20px;
+      text-align: center;
+    }
+
+    .bonus-card {
+      background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      transition: transform .3s;
+    }
+
+    .bonus-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--primary);
+    }
+
+    .bonus-card h3 {
+      color: var(--primary);
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .bonus-card p {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+
+    @keyframes slideUp {
+      from {transform: translateY(20px); opacity: 0;}
+      to {transform: translateY(0); opacity: 1;}
+    }
+
+    @keyframes zoomIn {
+      from {transform: scale(0.8); opacity: 0;}
+      to {transform: scale(1); opacity: 1;}
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Rede Premium</h2>
+
+  <div class="info-panel">
+    <div class="card unico">
+      <div class="coluna">
+        <div class="card-title">Indicações Pessoais</div>
+        <div class="card-value" id="total">0</div>
+      </div>
+      <div class="coluna">
+        <div class="card-title">Bônus Acumulado</div>
+        <div class="card-value" id="comissaoTotal">0 Kz</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="convite-section">
+    <div>Seu link exclusivo:</div>
+    <div class="convite-box">
+      <span id="linkConvite">Carregando...</span>
+      <button class="copy-btn" onclick="copiarLink()">Copiar</button>
+    </div>
+  </div>
+
+  <table id="tabelaConvidados">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Nome</th>
+        <th>Telefone</th>
+        <th>Capital Aplicado</th>
+        <th>Bônus Gerado</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <!-- Nova apresentação da comissão -->
+  <div class="bonus-info">
+    <div class="bonus-card">
+      <h3>🔹 Nível 1</h3>
+      <p>Receba <strong>30%</strong> sobre cada aplicação feita pelos seus indicados diretos.</p>
+    </div>
+    <div class="bonus-card">
+      <h3>🔸 Nível 2</h3>
+      <p>Ganhe <strong>5%</strong> sobre os investimentos feitos pelos indicados dos seus convidados.</p>
+    </div>
+    <div class="bonus-card">
+      <h3>✨ Nível 3</h3>
+      <p>Receba ainda <strong>1%</strong> dos indicados indiretos, expandindo sua renda residual.</p>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyChrog4zZNoK8HTMl1MTMD43U7HHxBMtVw",
+      authDomain: "palpite3ad.firebaseapp.com",
+      databaseURL: "https://palpite3ad-default-rtdb.firebaseio.com",
+      projectId: "palpite3ad",
+      storageBucket: "palpite3ad.appspot.com",
+      messagingSenderId: "435372004187",
+      appId: "1:435372004187:android:3b7ee8b621fba094b2407e"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const auth = getAuth(app);
+
+    onAuthStateChanged(auth, user => {
+      if (!user) {
+        alert("Sessão expirada. Faça login novamente.");
+        window.location.href = "index.html";
+        return;
+      }
+
+      const uid = user.uid;
+      const conviteCurto = uid.slice(-6);
+      const link = `${window.location.origin}/login.index.html?ref=${conviteCurto}`;
+      document.getElementById("linkConvite").textContent = link;
+    });
+
+    window.copiarLink = function () {
+      const texto = document.getElementById("linkConvite").textContent;
+      navigator.clipboard.writeText(texto).then(() => {
+        alert("Link copiado com sucesso!");
+      });
+    };
+  </script>
+</body>
+</html>

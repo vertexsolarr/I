@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Acessar - VERTEX SOLAR</title>
+  <style>
+    :root{
+      --hero-url: url('topo.jpg');
+      --radius: 22px;
+      --principal: #0d47a1;
+      --dourado: #d4af37;
+      --branco: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--branco);
+      color: #000;
+    }
+
+    /* TOPO */
+    .hero{
+      position: relative;
+      height: 210px;
+      border-bottom-left-radius: var(--radius);
+      border-bottom-right-radius: var(--radius);
+      overflow: hidden;
+    }
+    .hero::before{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.35)),
+        var(--hero-url) center/cover no-repeat;
+    }
+
+    /* CONTAINER */
+    .wrap{
+      max-width: 420px;
+      margin: -26px auto 30px;
+      padding: 22px 16px;
+    }
+    .card{
+      background: var(--branco);
+      border-radius: 18px;
+      box-shadow: 0 6px 24px rgba(0,0,0,.08);
+      padding: 22px 16px;
+      border: 1px solid #eee;
+    }
+
+    .etiqueta{
+      font-size: 14px;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: var(--principal);
+    }
+
+    .entrada{
+      width: 100%;
+      padding: 14px 44px 14px 12px;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      font-size: 15px;
+      outline: none;
+      background:#f7f7f7;
+    }
+    .entrada:focus{ border-color: var(--dourado); background:#fff; }
+
+    .campo{
+      position: relative;
+      margin-bottom: 16px;
+    }
+    .prefixo{
+      position: absolute;
+      left: 12px; top: 50%;
+      transform: translateY(-50%);
+      font-weight: 700;
+      color: var(--principal);
+      pointer-events: none;
+    }
+    .com-prefixo{ padding-left: 62px; }
+
+    .alternar{
+      position: absolute;
+      right: 12px; top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      user-select: none;
+      font-size: 14px;
+      color: var(--principal);
+      background: none;
+      border: none;
+    }
+
+    .linha-botoes{
+      display:flex; gap:14px; margin-top: 8px;
+    }
+    .botao{
+      flex:1;
+      padding: 14px;
+      border-radius: 14px;
+      border: none;
+      font-weight: 800;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.25s;
+    }
+    .botao-escuro{ 
+      background: var(--principal); 
+      color: var(--branco); 
+    }
+    .botao-escuro:hover{ background:#09367c; }
+
+    .botao-claro{ 
+      background: var(--dourado); 
+      color: #000; 
+    }
+    .botao-claro:hover{ background:#c19e2c; }
+
+    .suporte{
+      margin: 16px 0 6px;
+      font-size: 15px;
+      text-align: center;
+    }
+    .suporte a{
+      color: var(--principal); 
+      text-decoration: none; 
+      font-weight: 700;
+    }
+
+    .mensagem-erro{
+      color: red;
+      font-size: 14px;
+      text-align: center;
+      margin-top: 10px;
+      min-height: 18px;
+    }
+
+    /* MODAL */
+    .modal{
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal-conteudo{
+      background: var(--branco);
+      padding: 22px;
+      border-radius: 16px;
+      max-width: 360px;
+      text-align: center;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.2);
+      animation: surgir .3s ease;
+    }
+    @keyframes surgir{
+      from{ transform: scale(.8); opacity: 0; }
+      to{ transform: scale(1); opacity: 1; }
+    }
+    .modal h2{
+      margin: 0 0 10px;
+      color: var(--principal);
+      font-size: 20px;
+    }
+    .modal h2 i{
+      margin-right: 6px;
+      color: var(--dourado);
+    }
+    .modal a{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 16px;
+      padding: 10px;
+      border: 1px solid #eee;
+      border-radius: 10px;
+      background: #f9f9f9;
+      transition: 0.3s;
+      margin: 8px 0;
+    }
+    .modal a:hover{ background: #f1f1f1; }
+    .modal a i{ font-size: 20px; }
+    .modal a:first-of-type i{ color: #25d366; } /* WhatsApp verde */
+    .modal a:last-of-type i{ color: var(--principal); } /* Grupo azul */
+    .modal button{
+      margin-top: 14px;
+      padding: 10px 20px;
+      border-radius: 12px;
+      border: none;
+      background: var(--principal);
+      color: var(--branco);
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .modal button:hover{ background:#09367c; }
+    .modal button i{ margin-right: 6px; }
+  </style>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+
+  <!-- MODAL DE AVISO -->
+  <div id="modalAviso" class="modal">
+    <div class="modal-conteudo">
+      <h2><i class="fa-solid fa-headset"></i> Assistente Online</h2>
+      <p>Converse no WhatsApp:</p>
+      <a href="https://wa.me/244954994758" target="_blank">
+        <i class="fa-brands fa-whatsapp"></i> +244 954 994 758
+      </a>
+      <p>Participe também do nosso grupo:</p>
+      <a href="https://chat.whatsapp.com/IcjjWUIJPs4GN4JGzV9eu2?mode=ems_copy_c" target="_blank">
+        <i class="fa-solid fa-users"></i> Grupo WhatsApp
+      </a>
+      <button onclick="fecharAviso()"><i class="fa-solid fa-check"></i> Fechar</button>
+    </div>
+  </div>
+
+  <!-- TOPO -->
+  <header class="hero"></header>
+
+  <!-- LOGIN -->
+  <main class="wrap">
+    <div class="card">
+      <div class="etiqueta">Telefone</div>
+      <div class="campo">
+        <span class="prefixo">+244</span>
+        <input id="telefone" class="entrada com-prefixo" type="tel" inputmode="numeric" placeholder="Ex: 923456789" />
+      </div>
+
+      <div class="etiqueta">Chave de Acesso</div>
+      <div class="campo">
+        <input id="senha" class="entrada" type="password" placeholder="Chave de Acesso" />
+        <button id="alternarSenha" class="alternar" aria-label="Mostrar/ocultar chave">
+          <i class="fa-solid fa-eye"></i>
+        </button>
+      </div>
+
+      <div class="suporte">
+        <a href="#">Falar com o atendimento</a>
+      </div>
+
+      <div class="linha-botoes">
+        <button class="botao botao-claro" onclick="window.location.href='login.index.html'">Cadastrar</button>
+        <button class="botao botao-escuro" id="botaoAcessar">Acessar</button>
+      </div>
+
+      <div id="mensagemErro" class="mensagem-erro"></div>
+    </div>
+  </main>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyChrog4zZNoK8HTMl1MTMD43U7HHxBMtVw",
+      authDomain: "palpite3ad.firebaseapp.com",
+      projectId: "palpite3ad",
+      storageBucket: "palpite3ad.appspot.com",
+      messagingSenderId: "435372004187",
+      appId: "1:435372004187:android:3b7ee8b621fba094b2407e",
+      databaseURL: "https://palpite3ad-default-rtdb.firebaseio.com"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    const botao = document.getElementById("botaoAcessar");
+    const msgErro = document.getElementById("mensagemErro");
+
+    function acessar() {
+      msgErro.textContent = ""; 
+      const tel = document.getElementById("telefone").value.replace(/\s+/g,'').trim();
+      const chave = document.getElementById("senha").value;
+
+      if (!/^\d{9}$/.test(tel)) {
+        msgErro.textContent = "Digite um número de telefone válido com 9 dígitos.";
+        return;
+      }
+      if (!chave){
+        msgErro.textContent = "Digite sua chave de acesso.";
+        return;
+      }
+
+      const emailFake = tel + "@kerocapital.com";
+
+      botao.disabled = true;
+      botao.textContent = "Carregando...";
+
+      firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+      .then(()=>{
+        return firebase.auth().signInWithEmailAndPassword(emailFake, chave);
+      })
+      .then(() => {
+        window.location.href = "tela.html"; 
+      })
+      .catch(err => {
+        msgErro.textContent = "Falha ao acessar: " + err.message;
+      })
+      .finally(() => {
+        botao.disabled = false;
+        botao.textContent = "Acessar";
+      });
+    }
+
+    botao.addEventListener("click", acessar);
+    document.addEventListener("keydown", (e)=>{ if(e.key==="Enter") acessar(); });
+
+    const alternarSenha = document.getElementById("alternarSenha");
+    const entradaSenha  = document.getElementById("senha");
+    alternarSenha.addEventListener("click", ()=>{
+      const isPwd = entradaSenha.type === "password";
+      entradaSenha.type = isPwd ? "text" : "password";
+      alternarSenha.querySelector("i").classList.toggle("fa-eye-slash", isPwd);
+    });
+
+    // --- MODAL ---
+    function fecharAviso(){
+      document.getElementById("modalAviso").style.display="none";
+    }
+    window.onload = ()=>{ document.getElementById("modalAviso").style.display="flex"; };
+  </script>
+</body>
+</html>

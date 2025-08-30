@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Histórico de Depósitos</title>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9f9f9;
+      padding: 20px;
+      margin: 0;
+    }
+
+    h1 {
+      text-align: center;
+      color: #15803d;
+      margin-bottom: 30px;
+    }
+
+    .filtros {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .filtros button {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 8px;
+      background-color: #e5e7eb;
+      color: #111;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .filtros button.ativo {
+      background-color: #15803d;
+      color: #fff;
+    }
+
+    .item {
+      background-color: #fff;
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .left {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .valor {
+      font-size: 18px;
+      font-weight: bold;
+      color: #111;
+    }
+
+    .data {
+      font-size: 14px;
+      color: #777;
+      margin-top: 2px;
+    }
+
+    .status {
+      padding: 4px 12px;
+      border-radius: 16px;
+      font-weight: bold;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .aprovado {
+      background-color: #22c55e33;
+      color: #15803d;
+    }
+
+    .pendente {
+      background-color: #fde68a;
+      color: #b45309;
+    }
+
+    .rejeitado {
+      background-color: #fecaca;
+      color: #b91c1c;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Histórico de Depósitos</h1>
+
+  <div class="filtros" id="filtroDepositos">
+    <button data-filtro="todos" class="ativo">Todos</button>
+    <button data-filtro="aprovado">Aprovado</button>
+    <button data-filtro="pendente">Pendente</button>
+    <button data-filtro="rejeitado">Rejeitado</button>
+  </div>
+  <div id="depositosPendentes"></div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyChrog4zZNoK8HTMl1MTMD43U7HHxBMtVw",
+      authDomain: "palpite3ad.firebaseapp.com",
+      databaseURL: "https://palpite3ad-default-rtdb.firebaseio.com",
+      projectId: "palpite3ad",
+      storageBucket: "palpite3ad.appspot.com",
+      messagingSenderId: "435372004187",
+      appId: "1:435372004187:android:3b7ee8b621fba094b2407e"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+    function getStatusClass(status) {
+      const s = status.toLowerCase();
+      if (s === 'aprovado') return 'aprovado';
+      if (s === 'pendente') return 'pendente';
+      if (s === 'rejeitado') return 'rejeitado';
+      return '';
+    }
+
+    function formatarData(timestamp) {
+      const d = new Date(timestamp);
+      const dia = String(d.getDate()).padStart(2, '0');
+      const mes = String(d.getMonth() + 1).padStart(2, '0');
+      const ano = d.getFullYear();
+      const hora = String(d.getHours()).padStart(2, '0');
+      const min = String(d.getMinutes()).padStart(2, '0');
+      return `${dia}/${mes}/${ano} ${hora}:${min}`;
+    }
+
+    function aplicarFiltro(filtro, dados, container) {
+      container.innerHTML = '';
+      const filtroLower = filtro.toLowerCase();
+
+      dados.forEach(data => {
+        const status = data.status?.toLowerCase() || 'pendente';
+        if (filtroLower !== 'todos' && status !== filtroLower) return;
+
+        const html = `
+          <div class="item">
+            <div class="left">
+              <div class="valor">Kz ${parseFloat(data.valor).toLocaleString('pt-AO', {minimumFractionDigits: 2})}</div>
+              <div class="data">${formatarData(data.data || data.timestamp)}</div>
+            </div>
+            <div class="status ${getStatusClass(status)}">${data.status}</div>
+          </div>
+        `;
+        container.innerHTML += html;
+      });
+
+      if (container.innerHTML === '') {
+        container.innerHTML = "<p>Nenhum resultado para esse filtro.</p>";
+      }
+    }
+
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        alert("Faça login primeiro.");
+        window.location.href = "index.html";
+        return;
+      }
+
+      const uid = user.uid;
+      let depositosArray = [];
+      const container = document.getElementById("depositosPendentes");
+
+      db.ref("depositosPendentes/" + uid).once("value").then(snapshot => {
+        if (snapshot.exists()) {
+          snapshot.forEach(child => {
+            depositosArray.push(child.val());
+          });
+        }
+        aplicarFiltro('todos', depositosArray, container);
+      });
+
+      document.querySelectorAll("#filtroDepositos button").forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll("#filtroDepositos button").forEach(b => b.classList.remove("ativo"));
+          btn.classList.add("ativo");
+          aplicarFiltro(btn.dataset.filtro, depositosArray, container);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

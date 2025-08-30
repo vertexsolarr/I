@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Depósito - VERTEX SOLAR</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0a0f0d, #1b3027);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    .container {
+      background: #111;
+      border-radius: 20px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+      padding: 30px;
+      width: 100%;
+      max-width: 420px;
+      margin: 0 auto;
+      animation: slideUp 0.8s ease-out;
+      box-sizing: border-box;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(60px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 15px;
+      font-size: 1.6rem;
+      color: #ffd700;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(90deg, #ffd700, #c79b00);
+      border: none;
+      border-radius: 14px;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      color: #111;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background: linear-gradient(90deg, #e6c200, #a98500);
+    }
+
+    .btn:disabled {
+      background: gray;
+      cursor: not-allowed;
+    }
+
+    .info-box {
+      background: #1d2b24;
+      border-left: 5px solid #ffd700;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      word-break: break-word; /* evita estourar no celular */
+    }
+
+    .info-box strong {
+      color: #ffd700;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      outline: none;
+      background: #222;
+      color: #fff;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    .upload-box {
+      background: #222;
+      border: 2px dashed #555;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.3s;
+      position: relative;
+    }
+
+    .upload-box:hover {
+      border-color: #ffd700;
+      background: #2a2a2a;
+    }
+
+    .upload-box img {
+      max-width: 100px;
+      max-height: 100px;
+      margin-top: 10px;
+      border-radius: 10px;
+      border: 2px solid #444;
+    }
+
+    .note {
+      font-size: 0.9rem;
+      text-align: center;
+      margin-top: 12px;
+      color: #bbb;
+      line-height: 1.4;
+    }
+
+    .mensagem {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    /* Ajuste extra para telas pequenas */
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px;
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Depósito via Referência</h2>
+
+    <!-- Botão Registos -->
+    <button class="btn" style="margin-bottom: 20px;" onclick="abrirRegistos()">📜 Registos</button>
+
+    <div class="info-box">
+      <strong>Entidade:</strong> 10116 <br>
+      <strong>Referência:</strong> 954994758
+    </div>
+
+    <div class="form-group">
+      <label for="valor">Valor do Depósito (AOA)</label>
+      <input type="number" id="valor" placeholder="Insira o valor (mínimo 5000)">
+    </div>
+
+    <div class="form-group">
+      <label for="comprovativo">Enviar Comprovativo</label>
+      <div class="upload-box" onclick="document.getElementById('comprovativo').click();">
+        Clique aqui para enviar comprovativo
+        <div id="preview"></div>
+      </div>
+      <input type="file" id="comprovativo" style="display: none;" accept="image/*" onchange="mostrarPreview(event)">
+    </div>
+
+    <button class="btn" id="btnEnviar" onclick="enviarComprovativo()">Confirmar Depósito</button>
+
+    <p class="note">Após confirmar, o depósito será analisado pela nossa equipa.</p>
+
+    <div class="note">
+      O comprovativo submetido será verificado pela nossa equipa de forma segura e transparente.  
+      Assim que validado, o valor será creditado na sua conta dentro do prazo estipulado em até 5 minutos.
+      Certifique-se de inserir corretamente o montante e anexar um documento legível para evitar atrasos no processamento.
+    </div>
+
+    <div class="mensagem" id="mensagem"></div>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyChrog4zZNoK8HTMl1MTMD43U7HHxBMtVw",
+      authDomain: "palpite3ad.firebaseapp.com",
+      databaseURL: "https://palpite3ad-default-rtdb.firebaseio.com",
+      projectId: "palpite3ad",
+      storageBucket: "palpite3ad.appspot.com",
+      messagingSenderId: "435372004187",
+      appId: "1:435372004187:android:3b7ee8b621fba094b2407e"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+
+    firebase.auth().onAuthStateChanged(user => {
+      if (!user) location.href = "index.html";
+    });
+
+    function abrirRegistos() {
+      window.location.href = "registos.html";
+    }
+
+    function mostrarPreview(event) {
+      const file = event.target.files[0];
+      const previewDiv = document.getElementById("preview");
+      previewDiv.innerHTML = "";
+
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const img = document.createElement("img");
+          img.src = e.target.result;
+          previewDiv.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    async function enviarComprovativo() {
+      const user = firebase.auth().currentUser;
+      const valor = parseFloat(document.getElementById("valor").value);
+      const comprovativo = document.getElementById("comprovativo").files[0];
+      const mensagemEl = document.getElementById("mensagem");
+
+      if (!valor || valor < 5000) {
+        mensagemEl.innerText = "Digite um valor válido (mínimo 5000 AOA).";
+        return;
+      }
+
+      if (!comprovativo) {
+        mensagemEl.innerText = "Por favor, selecione o comprovativo (imagem).";
+        return;
+      }
+
+      try {
+        const snapshot = await firebase.storage().ref(`comprovativos/${user.uid}/${Date.now()}-${comprovativo.name}`).put(comprovativo);
+        const url = await snapshot.ref.getDownloadURL();
+
+        const userRef = firebase.database().ref("usuarios/" + user.uid);
+        const userSnapshot = await userRef.once("value");
+        const userData = userSnapshot.val() || {};
+
+        const nome = userData.nome || "Usuário";
+        const saldo = userData.saldo || 0;
+
+        await firebase.database().ref("depositosPendentes/" + user.uid).push({
+          nome: nome,
+          saldoAtual: saldo,
+          valor: valor,
+          status: "pendente",
+          comprovativoUrl: url,
+          data: new Date().toISOString()
+        });
+
+        mensagemEl.innerText = "✅ Comprovativo enviado com sucesso. Aguarde aprovação.";
+        document.getElementById("valor").value = "";
+        document.getElementById("comprovativo").value = "";
+        document.getElementById("preview").innerHTML = "";
+
+      } catch (err) {
+        console.error(err);
+        mensagemEl.innerText = "❌ Erro ao enviar comprovativo. Tente novamente.";
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>KERO CAPITAL- Investir</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #e6fff2;
+      color: #1b4332;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h2 {
+      color: #2d6a4f;
+      border-bottom: 2px solid #2d6a4f;
+      padding-bottom: 5px;
+      margin-top: 30px;
+    }
+
+    .produto {
+      background-color: #ffffff;
+      border: 1px solid #ccc;
+      border-left: 5px solid #2d6a4f;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .produto button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background-color: #2d6a4f;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .produto button:hover {
+      background-color: #1b4332;
+    }
+
+    .mensagem {
+      margin-top: 20px;
+      font-weight: bold;
+      color: #1b4332;
+      text-align: center;
+    }
+
+    #confirmacao {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #confirmacao > div {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      text-align: center;
+      max-width: 90%;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    }
+
+    #confirmacao button {
+      padding: 10px 20px;
+      margin: 10px;
+      border: none;
+      border-radius: 5px;
+    }
+
+    #confirmarBtn {
+      background-color: #2d6a4f;
+      color: white;
+    }
+
+    #cancelarBtn {
+      background-color: #ccc;
+      color: black;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>PRODUTOS DIÁRIOS</h2>
+  <div class="produto">
+    <div>Preço: KZ 5.000</div>
+    <div>Período: 1 dia</div>
+    <div>Rendimento Total: KZ 6.500</div>
+    <button onclick="comprar(5000, 1, 6500)">COMPRAR</button>
+  </div>
+  <div class="produto">
+    <div>Preço: KZ 10.000</div>
+    <div>Período: 1 dia</div>
+    <div>Rendimento Total: KZ 13.000</div>
+    <button onclick="comprar(10000, 1, 13000)">COMPRAR</button>
+  </div>
+
+  <h2>PRODUTOS SEMANAIS</h2>
+  <div class="produto">
+    <div>Preço: KZ 7.500</div>
+    <div>Período: 7 dias</div>
+    <div>Rendimento Total: KZ 13.500</div>
+    <button onclick="comprar(7500, 7, 13500)">COMPRAR</button>
+  </div>
+  <div class="produto">
+    <div>Preço: KZ 15.000</div>
+    <div>Período: 7 dias</div>
+    <div>Rendimento Total: KZ 27.200</div>
+    <button onclick="comprar(18000, 7,27200)">COMPRAR</button>
+  </div>
+
+  <h2>PRODUTOS MENSAIS</h2>
+  <div class="produto">
+    <div>Preço: KZ 3.000</div>
+    <div>Período: 28 dias</div>
+    <div>Rendimento Total: KZ 25.000</div>
+    <button onclick="comprar(3000, 28, 25000)">COMPRAR</button>
+  </div>
+  <div class="produto">
+    <div>Preço: KZ 6.000</div>
+    <div>Período: 28 dias</div>
+    <div>Rendimento Total: KZ 50.000</div>
+    <button onclick="comprar(6000, 28, 50000)">COMPRAR</button>
+  </div>
+
+  <div class="mensagem" id="mensagem"></div>
+
+  <!-- Caixa de confirmação -->
+  <div id="confirmacao">
+    <div>
+      <p id="confirmacaoTexto"></p>
+      <button id="confirmarBtn" onclick="confirmarCompra()">Confirmar</button>
+      <button id="cancelarBtn" onclick="cancelarCompra()">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyChrog4zZNoK8HTMl1MTMD43U7HHxBMtVw",
+      authDomain: "palpite3ad.firebaseapp.com",
+      databaseURL: "https://palpite3ad-default-rtdb.firebaseio.com",
+      projectId: "palpite3ad",
+      storageBucket: "palpite3ad.appspot.com",
+      messagingSenderId: "435372004187",
+      appId: "1:435372004187:android:3b7ee8b621fba094b2407e"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+
+    let userId = null;
+    let saldoAtual = 0;
+
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        userId = user.uid;
+        firebase.database().ref('usuarios/' + userId + '/saldo').once('value').then(snapshot => {
+          saldoAtual = snapshot.val() || 0;
+        });
+      } else {
+        window.location.href = "index.html";
+      }
+    });
+
+    // Variáveis temporárias
+    let precoTemp = 0;
+    let diasTemp = 0;
+    let rendimentoTemp = 0;
+
+    function comprar(preco, dias, rendimento) {
+      const mensagemEl = document.getElementById("mensagem");
+
+      if (saldoAtual < preco) {
+        mensagemEl.innerText = "⚠️ Saldo insuficiente para este investimento.";
+        return;
+      }
+
+      precoTemp = preco;
+      diasTemp = dias;
+      rendimentoTemp = rendimento;
+
+      const texto = `⚠️ Deseja confirmar a compra por KZ ${preco}?\nReceberá KZ ${rendimento} em ${dias} dia(s).\n\nSaldo atual: KZ ${saldoAtual}`;
+      document.getElementById("confirmacaoTexto").innerText = texto;
+      document.getElementById("confirmacao").style.display = "flex";
+    }
+
+    function cancelarCompra() {
+      document.getElementById("confirmacao").style.display = "none";
+    }
+
+    function confirmarCompra() {
+      document.getElementById("confirmacao").style.display = "none";
+      const mensagemEl = document.getElementById("mensagem");
+
+      const investimento = {
+        preco: precoTemp,
+        dias: diasTemp,
+        rendimento: rendimentoTemp,
+        inicio: Date.now(),
+        status: "ativo"
+      };
+
+      const novaCompra = firebase.database().ref('usuarios/' + userId + '/investimentos').push();
+      novaCompra.set(investimento)
+        .then(() => {
+          saldoAtual -= precoTemp;
+          firebase.database().ref('usuarios/' + userId + '/saldo').set(saldoAtual);
+          mensagemEl.innerText = "✅ COMPRA REALIZADA COM SUCESSO!";
+        })
+        .catch(error => {
+          mensagemEl.innerText = "❌ Erro ao investir. Tente novamente.";
+          console.error(error);
+        });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saque - VERTEX SOLAR</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0a0f0d, #1b3027);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    .container {
+      background: #111;
+      border-radius: 20px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+      padding: 30px;
+      width: 100%;
+      max-width: 420px;
+      margin: 0 auto;
+      animation: slideUp 0.8s ease-out;
+      position: relative;
+      box-sizing: border-box;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(60px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 1.6rem;
+      color: #ffd700;
+    }
+
+    .registros-btn {
+      display: block;
+      margin: 0 auto 20px auto;
+      padding: 10px 20px;
+      font-weight: bold;
+      font-size: 14px;
+      color: #111;
+      background: linear-gradient(90deg, #ffd700, #c79b00);
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    .registros-btn:hover {
+      background: linear-gradient(90deg, #e6c200, #a98500);
+    }
+
+    .saldo-box {
+      background: #1d2b24;
+      border-left: 5px solid #ffd700;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 1rem;
+      word-break: break-word;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      outline: none;
+      background: #222;
+      color: #fff;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    .bancos {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 15px 0;
+    }
+
+    .banco {
+      background: #222;
+      padding: 10px 18px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: bold;
+      border: 2px solid transparent;
+      transition: 0.3s;
+    }
+
+    .banco:hover {
+      border-color: #ffd700;
+    }
+
+    .banco.ativo {
+      background: #ffd700;
+      color: #111;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(90deg, #ffd700, #c79b00);
+      border: none;
+      border-radius: 14px;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      color: #111;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background: linear-gradient(90deg, #e6c200, #a98500);
+    }
+
+    .btn:disabled {
+      background: gray;
+      cursor: not-allowed;
+    }
+
+    .note {
+      font-size: 0.9rem;
+      text-align: center;
+      margin-top: 12px;
+      color: #bbb;
+      line-height: 1.4;
+    }
+
+    .mensagem {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    /* Ajuste para telas pequenas */
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px;
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Saque</h2>
+
+    <a href="registros2.html" class="registros-btn">Histórico</a>
+
+    <div class="saldo-box">
+      Quantia acessível: <strong id="saldo">A carregar...</strong>
+    </div>
+
+    <div class="form-group">
+      <label for="valor">Montante do Saque (AOA)</label>
+      <input type="number" id="valor" placeholder="Digite o montante (mínimo 2000)">
+    </div>
+
+    <div class="form-group">
+      <label>Selecione o banco</label>
+      <div class="bancos" id="listaBancos">
+        <div class="banco" data-banco="BFA">BFA</div>
+        <div class="banco" data-banco="ATL">ATL</div>
+        <div class="banco" data-banco="BAI">BAI</div>
+        <div class="banco" data-banco="BIC">BIC</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="nib">Conta Bancária / IBAN</label>
+      <input type="text" id="nib" placeholder="Insira a conta bancária / IBAN">
+    </div>
+
+    <div class="form-group">
+      <label for="titular">Nome do proprietário</label>
+      <input type="text" id="titular" placeholder="Insira o nome do proprietário da conta">
+    </div>
+
+    <button class="btn" id="btnRetirar" onclick="fazerRetirada()">Validar Saque</button>
+
+    <div class="note">
+      Garanta que todos os dados bancários estão corretos.  
+      Depois da validação, o pedido será avaliado pela nossa equipe e tratado no período estipulado, processado até no máximo 1 hora.
+    </div>
+
+    <div class="mensagem" id="mensagem"></div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyChrog4zZNoK8HTMl1MTMD43U7HHxBMtVw",
+      authDomain: "palpite3ad.firebaseapp.com",
+      databaseURL: "https://palpite3ad-default-rtdb.firebaseio.com",
+      projectId: "palpite3ad",
+      storageBucket: "palpite3ad.appspot.com",
+      messagingSenderId: "435372004187",
+      appId: "1:435372004187:android:3b7ee8b621fba094b2407e"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+
+    let userId = null;
+    let saldoAtual = 0;
+    let bancoSelecionado = "";
+
+    firebase.auth().onAuthStateChanged(user => {
+      if (!user) location.href = "index.html";
+      userId = user.uid;
+      const userRef = firebase.database().ref("usuarios/" + userId);
+
+      userRef.child("saldo").on("value", snapshot => {
+        saldoAtual = snapshot.val() || 0;
+        document.getElementById("saldo").innerText = `AOA ${saldoAtual.toLocaleString('pt-AO')}`;
+      });
+
+      userRef.child("dadosBancarios").once("value").then(snapshot => {
+        if (snapshot.exists()) {
+          const dados = snapshot.val();
+          bancoSelecionado = dados.banco || "";
+          if (bancoSelecionado) {
+            document.querySelectorAll(".banco").forEach(el => {
+              if (el.dataset.banco === bancoSelecionado) {
+                el.classList.add("ativo");
+              }
+            });
+          }
+          document.getElementById("nib").value = dados.nib || "";
+          document.getElementById("titular").value = dados.titular || "";
+        }
+      });
+    });
+
+    document.addEventListener("click", e => {
+      if (e.target.classList.contains("banco")) {
+        document.querySelectorAll(".banco").forEach(el => el.classList.remove("ativo"));
+        e.target.classList.add("ativo");
+        bancoSelecionado = e.target.dataset.banco;
+      }
+    });
+
+    function fazerRetirada() {
+      const valor = parseFloat(document.getElementById("valor").value);
+      const nib = document.getElementById("nib").value.trim();
+      const titular = document.getElementById("titular").value.trim();
+      const mensagemEl = document.getElementById("mensagem");
+
+      if (isNaN(valor) || valor < 2000) {
+        mensagemEl.innerText = "⚠️ Montante mínimo para saque é 2000 AOA.";
+        return;
+      }
+
+      if (valor > saldoAtual) {
+        mensagemEl.innerText = "⚠️ Montante ultrapassa a quantia acessível.";
+        return;
+      }
+
+      if (!bancoSelecionado || !nib || !titular) {
+        mensagemEl.innerText = "⚠️ Complete todos os campos bancários.";
+        return;
+      }
+
+      const userRef = firebase.database().ref("usuarios/" + userId);
+      const novoSaldo = saldoAtual - valor;
+
+      userRef.child("saldo").set(novoSaldo);
+      userRef.child("dadosBancarios").set({ banco: bancoSelecionado, nib, titular });
+
+      userRef.child("nome").once("value").then(nomeSnap => {
+        const nome = nomeSnap.val() || "Cliente";
+        firebase.database().ref("retiradas").push().set({
+          userId,
+          nome,
+          saldoAnterior: saldoAtual,
+          montanteSaque: valor,
+          banco: bancoSelecionado,
+          nib,
+          titular,
+          estado: "em análise",
+          data: new Date().toISOString()
+        });
+        mensagemEl.innerText = "✅ Pedido de saque enviado com êxito!";
+      });
+    }
+  </script>
+</body>
+</html>

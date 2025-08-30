@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VERTEX SOLAR</title>
+  <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom, rgba(255,253,231,0.95), rgba(236,253,245,0.95)),
+                  url('https://img.freepik.com/free-photo/solar-panels-rooftop-sunset_53876-145439.jpg') no-repeat center/cover;
+      background-attachment: fixed;
+      color: #1f2937;
+      overflow-x: hidden;
+    }
+
+    /* ANIMAÇÕES */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes zoomIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* TOPO */
+    header {
+      background: linear-gradient(135deg, #facc15, #f59e0b, #16a34a);
+      padding: 50px 20px 40px;
+      text-align: center;
+      color: white;
+      border-bottom-left-radius: 40px;
+      border-bottom-right-radius: 40px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      animation: fadeDown 1s ease-out;
+    }
+    .logo-area {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo-area img {
+      width: 50px;
+      height: 50px;
+      animation: zoomIn 1.2s ease;
+    }
+    header h1 {
+      font-size: 30px;
+      margin: 0;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    header p {
+      margin-top: 8px;
+      font-size: 15px;
+      opacity: 0.95;
+      animation: fadeUp 1.2s ease;
+    }
+
+    /* CARD DE SALDO */
+    .saldo-card {
+      margin: 20px;
+      padding: 20px;
+      background: linear-gradient(135deg, rgba(250,249,195,0.95), rgba(250,240,138,0.95), rgba(250,204,21,0.95)),
+                  url('https://www.transparenttextures.com/patterns/cubes.png');
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      text-align: center;
+      animation: zoomIn 1s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .saldo-card:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+    .saldo-top {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .saldo-top img {
+      width: 36px;
+      height: 36px;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    }
+    .saldo-valor {
+      font-size: 26px;
+      font-weight: bold;
+      color: #ca8a04;
+    }
+    .saldo-info {
+      font-size: 14px;
+      color: #374151;
+    }
+    .user-line {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+    #userName {
+      font-weight: 600;
+      font-size: 16px;
+      color: #065f46;
+    }
+    .user-id {
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    /* BOTÕES */
+    .action-grid {
+      margin: 25px 15px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 15px;
+    }
+    .action-card {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      background: white;
+      padding: 14px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      cursor: pointer;
+      transform: scale(1);
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards;
+    }
+    .action-card:nth-child(1){ animation-delay: 0.2s; }
+    .action-card:nth-child(2){ animation-delay: 0.4s; }
+    .action-card:nth-child(3){ animation-delay: 0.6s; }
+    .action-card:hover {
+      transform: scale(1.04);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+    .action-card img {
+      width: 40px;
+      height: 40px;
+      transition: transform 0.3s ease;
+    }
+    .action-card:hover img {
+      transform: rotate(8deg) scale(1.1);
+    }
+    .action-text {
+      display: flex;
+      flex-direction: column;
+    }
+    .action-text span:first-child {
+      font-weight: 600;
+      font-size: 15px;
+      color: #065f46;
+    }
+    .action-text span:last-child {
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    /* ===== BARRA DINÂMICA DE DEPÓSITOS ===== */
+    .ticker-wrap {
+      position: relative;
+      margin: 20px;
+      border-radius: 16px;
+      overflow: hidden;
+      background: linear-gradient(90deg, rgba(34,197,94,0.12), rgba(250,204,21,0.12));
+      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+      border: 1px solid rgba(16,185,129,0.25);
+    }
+    .ticker-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      background: linear-gradient(135deg, #16a34a, #22c55e);
+      color: #fff;
+      font-weight: 700;
+      letter-spacing: .3px;
+    }
+    .ticker-header img {
+      width: 20px;
+      height: 20px;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.25));
+    }
+    .ticker {
+      display: flex;
+      width: max-content; /* largura baseada no conteúdo para rolagem infinita */
+      gap: 28px;
+      padding: 12px 14px;
+      align-items: center;
+      animation: ticker-move 30s linear infinite;
+    }
+    /* pausa ao passar o rato (desktop) */
+    .ticker-wrap:hover .ticker {
+      animation-play-state: paused;
+    }
+    .ticker__item {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #ffffff;
+      border: 1px solid rgba(0,0,0,0.06);
+      padding: 8px 12px;
+      border-radius: 999px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+      white-space: nowrap;
+      font-size: 14px;
+      color: #065f46;
+    }
+    .badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fde68a;
+    }
+    .amount {
+      font-weight: 700;
+      color: #1d4ed8;
+    }
+    .city {
+      font-size: 12px;
+      color: #6b7280;
+    }
+    @keyframes ticker-move {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); } /* vamos duplicar itens para permitir loop perfeito */
+    }
+
+    /* MENU */
+    nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: linear-gradient(270deg, #facc15, #f59e0b, #16a34a, #22c55e);
+      background-size: 400% 400%;
+      animation: gradientMove 8s ease infinite;
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.25);
+    }
+    nav button {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+    nav button.active {
+      color: #1e3a8a;
+      text-shadow: 0 0 6px rgba(255,255,255,0.8);
+    }
+    nav button:hover {
+      transform: translateY(-4px) scale(1.05);
+      color: #fef3c7;
+    }
+    nav img {
+      width: 26px;
+      height: 26px;
+      margin-bottom: 4px;
+      transition: transform 0.4s ease;
+    }
+    nav button:hover img {
+      transform: rotate(8deg) scale(1.1);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOPO -->
+  <header>
+    <div class="logo-area">
+      <img src="https://img.icons8.com/fluency/48/solar-panel.png" alt="Painel Solar">
+      <h1>VERTEX SOLAR</h1>
+    </div>
+    <p>Energia que valoriza o seu futuro</p>
+  </header>
+
+  <!-- CARD DE SALDO -->
+  <div class="saldo-card">
+    <div class="saldo-top">
+      <img src="https://img.icons8.com/color/48/wallet.png" alt="Carteira">
+      <div class="saldo-valor" id="userSaldo">Kz 0</div>
+    </div>
+    <div class="saldo-info">
+      <div class="user-line">
+        <span id="userName">Olá, Usuário</span>
+        <span class="user-id" id="userId"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTÕES DE AÇÃO -->
+  <div class="action-grid">
+    <div class="action-card" onclick="location.href='deposito.html'">
+      <img src="https://img.icons8.com/fluency/48/solar-panel.png" alt="Recarga"/>
+      <div class="action-text">
+        <span>Recarga</span>
+        <span>Adicionar fundos à sua conta</span>
+      </div>
+    </div>
+
+    <div class="action-card" onclick="location.href='retirada.html'">
+      <img src="https://img.icons8.com/fluency/48/money.png" alt="Retirada"/>
+      <div class="action-text">
+        <span>Retirada</span>
+        <span>Saque seu saldo disponível</span>
+      </div>
+    </div>
+
+    <div class="action-card" onclick="location.href='equipe.html'">
+      <img src="https://img.icons8.com/fluency/48/conference-call.png" alt="Equipe"/>
+      <div class="action-text">
+        <span>Equipe</span>
+        <span>Convide e gerencie afiliados</span>
+      </div>
+    </div>
+  </div>
+
+<!-- ===== BARRA DINÂMICA (substitui as antigas seções de informação) ===== -->
+  <div class="ticker-wrap" aria-live="polite">
+    <div class="ticker-header">
+      <img src="https://img.icons8.com/fluency/48/money-bag.png" alt="Depósitos">
+      <span>Depósitos a acontecer agora</span>
+    </div>
+    <div id="tickerTrack" class="ticker"></div>
+  </div>
+
+<!-- ===== BARRA DINÂMICA (substitui as antigas seções de informação) ===== -->
+  <div class="ticker-wrap" aria-live="polite">
+    <div class="ticker-header">
+      <img src="https://img.icons8.com/fluency/48/money-bag.png" alt="Depósitos">
+      <span>Depósitos a acontecer agora</span>
+    </div>
+    <div id="tickerTrack" class="ticker"></div>
+  </div>
+
+  <!-- MENU -->
+  <nav>
+    <button class="active" onclick="location.href='tela.html'">
+      <img src="https://img.icons8.com/fluency/48/dashboard-layout.png" alt="Início"/>
+      Início
+    </button>
+    <button onclick="location.href='invest.html'">
+      <img src="https://img.icons8.com/fluency/48/investment-portfolio.png" alt="Portfólio"/>
+      Portfólio
+    </button>
+    <button onclick="location.href='ativos.html'">
+      <img src="https://img.icons8.com/fluency/48/combo-chart.png" alt="Rendimentos"/>
+      Rendimentos
+    </button>
+    <button onclick="logout()">
+      <img src="https://img.icons8.com/fluency/48/shutdown.png" alt="Encerrar"/>
+      Encerrar
+    </button>
+  </nav>
+
+  <!-- FIREBASE -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+  <script>
+    /* ===== Firebase ===== */
+    const firebaseConfig = {
+      apiKey: "AIzaSyChrog4zZNoK8HTMl1MTMD43U7HHxBMtVw",
+      authDomain: "palpite3ad.firebaseapp.com",
+      databaseURL: "https://palpite3ad-default-rtdb.firebaseio.com",
+      projectId: "palpite3ad",
+      storageBucket: "palpite3ad.appspot.com",
+      messagingSenderId: "435372004187",
+      appId: "1:435372004187:web:3b7ee8b621fba094b2407e"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        const uid = user.uid;
+        document.getElementById('userId').innerText = "ID: " + uid.substring(0, 6);
+
+        firebase.database().ref('usuarios/' + uid).once('value').then(snapshot => {
+          const data = snapshot.val();
+          if (data) {
+            document.getElementById('userName').innerText = "Olá, " + (data.nome || 'Usuário');
+            const saldo = Number(data.saldo || 0).toLocaleString('pt-AO', { minimumFractionDigits: 2 });
+            document.getElementById('userSaldo').innerText = "Kz " + saldo;
+          }
+        });
+      } else {
+        window.location.href = "index.html";
+      }
+    });
+
+    function logout() {
+      firebase.auth().signOut().then(() => {
+        window.location.href = "index.html";
+      });
+    }
+
+    /* ===== BARREIRA DINÂMICA DE DEPÓSITOS ===== */
+    const NAMES = [
+      "Carlos M.", "Ana P.", "João L.", "Marcos A.", "Patrícia D.", "Tiago S.",
+      "Beatriz C.", "Afonso R.", "Vitória N.", "Luís F.", "Marta G.", "Hélio V.",
+      "Inês B.", "Ricardo T.", "Bruno M.", "Cátia J.", "Kátia S.", "Mauro K.",
+      "Nelson P.", "Elisa R.", "Rui M.", "Jandira C.", "Osvaldo N.", "Yara F.", "Sérgio.", "Madalena.", "Mário.", "Sofia.", "Rita.", "Joaquim.", "Filipe.",
+    ];
+    const CITIES = ["Luanda", "Benguela", "Lubango", "Lobito", "Huambo", "Cazenga", "Viana", "Namibe"];
+
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function randomAmount() {
+      // Montantes em Kz (ex.: 5.000 a 80.000)
+      const val = randomInt(5000, 80000);
+      return val.toLocaleString('pt-AO');
+    }
+
+    function randomItem(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function buildDepositChip(name, amount, city, whenText) {
+      const chip = document.createElement('span');
+      chip.className = 'ticker__item';
+      chip.innerHTML = `
+        <span class="badge">Depósito</span>
+        <strong>${name}</strong>
+        <span class="amount">Kz ${amount}</span>
+        <span class="city">• ${city} • ${whenText}</span>
+      `;
+      return chip;
+    }
+
+    function timeLabel() {
+      // Aleatório: "agora", "há 1 min", "há 2 min", "há 5 min"
+      const options = ["agora", "há 1 min", "há 2 min", "há 3 min", "há 5 min"];
+      return randomItem(options);
+    }
+
+    function generateTickerItems(qty = 18) {
+      const frag = document.createDocumentFragment();
+      for (let i = 0; i < qty; i++) {
+        const chip = buildDepositChip(
+          randomItem(NAMES),
+          randomAmount(),
+          randomItem(CITIES),
+          timeLabel()
+        );
+        frag.appendChild(chip);
+      }
+      return frag;
+    }
+
+    function setupTicker() {
+      const track = document.getElementById('tickerTrack');
+      track.innerHTML = '';
+      // primeira sequência
+      track.appendChild(generateTickerItems(18));
+      // duplicado para loop perfeito (animação termina a 50%)
+      track.appendChild(track.cloneNode(true));
+      // Nota: como clonamos o track, precisamos remover id do filho clonado
+      const clones = track.querySelectorAll('#tickerTrack');
+      clones.forEach(el => el.removeAttribute('id'));
+    }
+
+    function refreshSomeItems() {
+      // Atualiza alguns chips para parecer "vivo"
+      const chips = document.querySelectorAll('.ticker__item');
+      if (chips.length === 0) return;
+      for (let i = 0; i < 4; i++) {
+        const idx = randomInt(0, chips.length - 1);
+        const chip = chips[idx];
+        const name = randomItem(NAMES);
+        const amount = randomAmount();
+        const city = randomItem(CITIES);
+        const when = timeLabel();
+        chip.innerHTML = `
+          <span class="badge">Depósito</span>
+          <strong>${name}</strong>
+          <span class="amount">Kz ${amount}</span>
+          <span class="city">• ${city} • ${when}</span>
+        `;
+      }
+    }
+
+    // Inicialização
+    document.addEventListener('DOMContentLoaded', () => {
+      setupTicker();
+      // Atualiza conteúdos periodicamente
+      setInterval(refreshSomeItems, 4500);
+      // Reconstroi a pista de tempos em tempos para manter fluxo
+      setInterval(setupTicker, 60000);
+    });
+  </script>
+</body>
+</html>

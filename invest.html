@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VERTEX SOLAR - Investimentos</title>
+  <style>
+    :root {
+      --gold: #d4af37;
+      --green: #0f7b2c;
+      --white: #ffffff;
+      --light: #f5f5f5;
+      --dark: #0a5a20;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0f7b2c, #083c15);
+      color: var(--white);
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+      min-height: 100vh;
+    }
+
+    header h1 {
+      font-size: 2.4rem;
+      color: var(--gold);
+      margin: 0;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      text-shadow: 0 0 8px rgba(212,175,55,0.6);
+    }
+
+    .btn-filtros {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .btn-filtros button {
+      background: linear-gradient(135deg, var(--gold), #e7c860);
+      color: var(--dark);
+      border: none;
+      padding: 12px 28px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all .3s ease;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.5);
+    }
+
+    .btn-filtros button:hover,
+    .btn-filtros button.ativo {
+      background: var(--white);
+      color: var(--gold);
+      transform: scale(1.05);
+    }
+
+    .planos-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      margin-top: 40px;
+      animation: fadeIn 1s ease forwards;
+    }
+
+    .plano {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(212,175,55,0.6);
+      border-radius: 20px;
+      padding: 25px;
+      color: var(--white);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+      transition: transform .3s ease, box-shadow .3s ease;
+      text-align: left;
+      animation: slideUp .7s ease;
+    }
+
+    .plano:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 12px 25px rgba(212,175,55,0.4);
+    }
+
+    .plano h3 {
+      color: var(--gold);
+      margin-bottom: 18px;
+      font-size: 20px;
+      text-transform: uppercase;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+
+    .plano .linha {
+      display: flex;
+      justify-content: space-between;
+      margin: 8px 0;
+      font-size: 15px;
+    }
+
+    .plano .linha span:first-child {
+      font-weight: bold;
+      color: var(--white);
+    }
+
+    .plano .linha span:last-child {
+      color: #f1f1f1;
+    }
+
+    .plano button {
+      margin-top: 20px;
+      padding: 14px 20px;
+      background: linear-gradient(135deg, var(--gold), #e7c860);
+      color: var(--dark);
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 15px;
+      width: 100%;
+      transition: all .3s ease;
+    }
+
+    .plano button:hover {
+      background: var(--white);
+      color: var(--gold);
+      transform: scale(1.03);
+    }
+
+    .mensagem {
+      margin-top: 25px;
+      font-weight: bold;
+      font-size: 16px;
+      color: var(--gold);
+    }
+
+    /* --- Modal estilizado --- */
+    #confirmacao {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(8px);
+    }
+
+    #confirmacao > div {
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(15px);
+      padding: 30px 25px;
+      border-radius: 20px;
+      text-align: center;
+      max-width: 420px;
+      width: 90%;
+      box-shadow: 0 0 25px rgba(212,175,55,0.6), 0 8px 25px rgba(0,0,0,0.3);
+      border: 2px solid var(--gold);
+      animation: zoomIn .4s ease;
+      position: relative;
+    }
+
+    #confirmacao .icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 15px auto;
+      border-radius: 50%;
+      background: radial-gradient(circle at center, var(--gold), #b89b2f);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 15px rgba(212,175,55,0.7);
+      animation: pulse 1.8s infinite;
+    }
+
+    #confirmacao .icon span {
+      font-size: 40px;
+      color: var(--white);
+    }
+
+    #confirmacao h2 {
+      color: var(--green);
+      margin-bottom: 8px;
+      font-size: 22px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    #confirmacao p {
+      margin-bottom: 25px;
+      font-size: 15px;
+      color: #333;
+      line-height: 1.5;
+    }
+
+    #confirmacao .acoes {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    #confirmacao button {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all .3s ease;
+    }
+
+    #confirmarBtn {
+      background: var(--gold);
+      color: var(--green);
+      box-shadow: 0 4px 12px rgba(212,175,55,0.5);
+    }
+
+    #confirmarBtn:hover {
+      background: var(--green);
+      color: var(--white);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    }
+
+    #cancelarBtn {
+      background: #eee;
+      color: var(--green);
+      border: 1px solid #ccc;
+    }
+
+    #cancelarBtn:hover {
+      background: #ddd;
+    }
+
+    /* Animações */
+    @keyframes fadeIn {
+      from {opacity:0; transform:translateY(20px);}
+      to {opacity:1; transform:translateY(0);}
+    }
+
+    @keyframes slideUp {
+      from {opacity:0; transform:translateY(30px);}
+      to {opacity:1; transform:translateY(0);}
+    }
+
+    @keyframes zoomIn {
+      from { transform: scale(0.7); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>VERTEX SOLAR</h1>
+    <div class="btn-filtros">
+      <button class="ativo" onclick="mostrarPlanos('diarios', this)">Planos Rápidos</button>
+      <button onclick="mostrarPlanos('longos', this)">Acordos Estendidos</button>
+    </div>
+  </header>
+
+  <!-- Planos Diários -->
+  <div id="planosDiarios" class="planos-container">
+    <div class="plano" data-preco="7000" data-dias="1" data-ganho="9000">
+      <h3>Plano Solar Essencial</h3>
+      <div class="linha"><span>Investimento:</span><span>AOA 7.000</span></div>
+      <div class="linha"><span>Duração:</span><span>1 dia</span></div>
+      <div class="linha renda"></div>
+      <div class="linha total"></div>
+      <button onclick="comprar(7000, 1, 9000)">Participar</button>
+    </div>
+  </div>
+
+  <!-- Planos Longos -->
+  <div id="planosLongos" class="planos-container" style="display:none;">
+    <div class="plano" data-preco="5000" data-dias="31" data-ganho="40000">
+      <h3>Acordo Bronze</h3>
+      <div class="linha"><span>Investimento:</span><span>AOA 5.000</span></div>
+      <div class="linha"><span>Duração:</span><span>31 dias</span></div>
+      <div class="linha renda"></div>
+      <div class="linha total"></div>
+      <button onclick="comprar(5000, 31, 40000)">Participar</button>
+    </div>
+    <div class="plano" data-preco="10000" data-dias="31" data-ganho="80000">
+      <h3>Acordo Prata</h3>
+      <div class="linha"><span>Investimento:</span><span>AOA 10.000</span></div>
+      <div class="linha"><span>Duração:</span><span>31 dias</span></div>
+      <div class="linha renda"></div>
+      <div class="linha total"></div>
+      <button onclick="comprar(10000, 31, 80000)">Participar</button>
+    </div>
+    <div class="plano" data-preco="20000" data-dias="31" data-ganho="160000">
+      <h3>Plano Ouro</h3>
+      <div class="linha"><span>Investimento:</span><span>AOA 20.000</span></div>
+      <div class="linha"><span>Duração:</span><span>31 dias</span></div>
+      <div class="linha renda"></div>
+      <div class="linha total"></div>
+      <button onclick="comprar(20000, 31, 160000)">Participar</button>
+    </div>
+    <div class="plano" data-preco="40000" data-dias="31" data-ganho="320000">
+      <h3>Plano Diamante</h3>
+      <div class="linha"><span>Investimento:</span><span>AOA 40.000</span></div>
+      <div class="linha"><span>Duração:</span><span>31 dias</span></div>
+      <div class="linha renda"></div>
+      <div class="linha total"></div>
+      <button onclick="comprar(40000, 31, 320000)">Participar</button>
+    </div>
+  </div>
+
+  <div class="mensagem" id="mensagem"></div>
+
+  <!-- Modal -->
+  <div id="confirmacao">
+    <div>
+      <div class="icon"><span>⚡</span></div>
+      <h2>Confirmação de Investimento</h2>
+      <p id="confirmacaoTexto"></p>
+      <div class="acoes">
+        <button id="confirmarBtn" onclick="confirmarCompra()">Confirmar</button>
+        <button id="cancelarBtn" onclick="cancelarCompra()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyChrog4zZNoK8HTMl1MTMD43U7HHxBMtVw",
+      authDomain: "palpite3ad.firebaseapp.com",
+      databaseURL: "https://palpite3ad-default-rtdb.firebaseio.com",
+      projectId: "palpite3ad",
+      storageBucket: "palpite3ad.appspot.com",
+      messagingSenderId: "435372004187",
+      appId: "1:435372004187:android:3b7ee8b621fba094b2407e"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+
+    let userId = null;
+    let saldoAtual = 0;
+
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        userId = user.uid;
+        firebase.database().ref('usuarios/' + userId + '/saldo').once('value').then(snapshot => {
+          saldoAtual = snapshot.val() || 0;
+        });
+      } else {
+        window.location.href = "index.html";
+      }
+    });
+
+    let precoTemp = 0;
+    let diasTemp = 0;
+    let rendimentoTemp = 0;
+
+    function mostrarPlanos(tipo, botao) {
+      document.getElementById("planosDiarios").style.display = (tipo === 'diarios') ? 'grid' : 'none';
+      document.getElementById("planosLongos").style.display = (tipo === 'longos') ? 'grid' : 'none';
+      document.querySelectorAll(".btn-filtros button").forEach(btn => btn.classList.remove("ativo"));
+      botao.classList.add("ativo");
+    }
+
+    function comprar(preco, dias, rendimento) {
+      const mensagemEl = document.getElementById("mensagem");
+
+      if (saldoAtual < preco) {
+        mensagemEl.innerText = "⚠️ Saldo insuficiente para este investimento.";
+        return;
+      }
+
+      precoTemp = preco;
+      diasTemp = dias;
+      rendimentoTemp = rendimento;
+
+      const rendaDiaria = Math.floor(rendimento / dias);
+
+      const texto = `Valor do investimento: AOA ${preco}
+Renda diária: AOA ${rendaDiaria}
+Ganho total esperado: AOA ${rendimento} em ${dias} dia(s).
+
+Saldo atual: AOA ${saldoAtual}`;
+      document.getElementById("confirmacaoTexto").innerText = texto;
+      document.getElementById("confirmacao").style.display = "flex";
+    }
+
+    function cancelarCompra() {
+      document.getElementById("confirmacao").style.display = "none";
+    }
+
+    function confirmarCompra() {
+      document.getElementById("confirmacao").style.display = "none";
+      const mensagemEl = document.getElementById("mensagem");
+
+      const investimento = {
+        preco: precoTemp,
+        dias: diasTemp,
+        rendimento: rendimentoTemp,
+        inicio: Date.now(),
+        status: "ativo"
+      };
+
+      const novaCompra = firebase.database().ref('usuarios/' + userId + '/investimentos').push();
+      novaCompra.set(investimento)
+        .then(() => {
+          saldoAtual -= precoTemp;
+          firebase.database().ref('usuarios/' + userId + '/saldo').set(saldoAtual);
+          mensagemEl.innerText = "✅ Investimento realizado com sucesso!";
+        })
+        .catch(error => {
+          mensagemEl.innerText = "❌ Erro ao investir. Tente novamente.";
+          console.error(error);
+        });
+    }
+
+    // Preencher automaticamente renda diária e ganho total nos cards
+    document.querySelectorAll(".plano").forEach(plano => {
+      const preco = parseInt(plano.dataset.preco);
+      const dias = parseInt(plano.dataset.dias);
+      const ganho = parseInt(plano.dataset.ganho);
+      const renda = Math.floor(ganho / dias);
+
+      plano.querySelector(".linha.renda").innerHTML = `<span>Renda Diária:</span><span>AOA ${renda}</span>`;
+      plano.querySelector(".linha.total").innerHTML = `<span>Ganho Total:</span><span>AOA ${ganho}</span>`;
+    });
+  </script>
+</body>
+</html>
