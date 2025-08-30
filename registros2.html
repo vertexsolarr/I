@@ -96,7 +96,6 @@
       border-color: #e63939;
     }
 
-    /* 🔹 Montante à esquerda e Data à direita */
     .detalhes {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -139,7 +138,6 @@
       to {opacity:1; transform: translateY(0);}
     }
 
-    /* 🔹 Só quebra em 1 coluna se tela for muito pequena */
     @media (max-width: 350px) {
       .detalhes {
         grid-template-columns: 1fr;
@@ -170,9 +168,9 @@
 
     function obterClasse(status) {
       const s = status?.toLowerCase() || "aguardo";
-      if (s === "aprovado") return "ok";
-      if (s === "pendente") return "aguardo";
-      if (s === "rejeitado") return "falhou";
+      if (s.includes("aprovado")) return "ok";
+      if (s.includes("pendente") || s.includes("análise")) return "aguardo";
+      if (s.includes("rejeitado")) return "falhou";
       return "";
     }
 
@@ -180,6 +178,12 @@
       const d = new Date(ts);
       return d.toLocaleDateString("pt-PT", { day: "2-digit", month: "2-digit", year: "numeric" }) 
              + " " + d.toLocaleTimeString("pt-PT", { hour: "2-digit", minute: "2-digit" });
+    }
+
+    function formatarValor(valor) {
+      if (!valor) return "0,00";
+      const num = parseFloat(valor);
+      return isNaN(num) ? "0,00" : num.toLocaleString("pt-AO", { minimumFractionDigits: 2 });
     }
 
     auth.onAuthStateChanged(user => {
@@ -206,11 +210,11 @@
               <div class="cartao">
                 <div class="topo">
                   <div>💰 Saque</div>
-                  <div class="status ${obterClasse(val.status)}">${val.status || "Aguardo"}</div>
+                  <div class="status ${obterClasse(val.estado)}">${val.estado || "Em análise"}</div>
                 </div>
                 <div class="detalhes">
-                  <div class="campo">💵 <div><span>Kz ${parseFloat(val.valorRetirada).toLocaleString("pt-AO", {minimumFractionDigits: 2})}</span><small>Montante</small></div></div>
-                  <div class="campo">📅 <div><span>${formatarData(val.data || val.timestamp)}</span><small>Momento</small></div></div>
+                  <div class="campo">💵 <div><span>Kz ${formatarValor(val.montanteSaque)}</span><small>Montante</small></div></div>
+                  <div class="campo">📅 <div><span>${formatarData(val.data)}</span><small>Momento</small></div></div>
                 </div>
               </div>
             `;
