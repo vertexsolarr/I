@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>VERTEX SOLAR- Cadastro</title>
+  <title>VERTEX SOLAR - Cadastro</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <style>
     :root{
@@ -197,6 +197,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
   <script>
+    // 🔥 Firebase atual (mantendo o mesmo que você já usa)
     const firebaseConfig = {
       apiKey: "AIzaSyChrog4zZNoK8HTMl1MTMD43U7HHxBMtVw",
       authDomain: "palpite3ad.firebaseapp.com",
@@ -211,19 +212,19 @@
     const auth = firebase.auth();
     const database = firebase.database();
 
-    let codigoRealCompleto = null;
+    let codigoConviteParam = null;
 
-    // Pega ref da URL e mostra só os 6 primeiros
+    // Pega ref da URL e mostra no input (só exibe 6 dígitos)
     window.onload = function () {
       const params = new URLSearchParams(window.location.search);
       const ref = params.get("ref");
       if (ref) {
-        codigoRealCompleto = ref;
+        codigoConviteParam = ref;
         document.getElementById("codigoConvite").value = ref.substring(0,6);
       }
     };
 
-    function registrar(){
+    async function registrar(){
       const nome = document.getElementById("nome").value.trim();
       const telefone = document.getElementById("telefone").value.trim();
       const senha = document.getElementById("senha").value.trim();
@@ -238,32 +239,45 @@
         return;
       }
 
-      // Agora só salva os 9 dígitos no Firebase
       const telefone9 = telefone;
       const emailFalso = telefone9 + "@kerocapital.com"; 
 
-      auth.createUserWithEmailAndPassword(emailFalso, senha)
-        .then(cred=>{
-          const uid = cred.user.uid;
-          const usuario = {
-            nome: nome,
-            telefone: telefone9, // <- apenas os 9 dígitos
-            saldo: 0,
-            codigoConviteCurto: uid.substring(0,6),
-            dataCadastro: new Date().toISOString()
-          };
-          if(codigoRealCompleto){
-            usuario.convidadoPor = codigoRealCompleto;
+      try {
+        const cred = await auth.createUserWithEmailAndPassword(emailFalso, senha);
+        const uid = cred.user.uid;
+
+        let convidadoPor = null;
+
+        // 🔎 Se veio convite, procurar UID do patrocinador
+        if(codigoConviteParam){
+          const snap = await database.ref("usuarios")
+            .orderByChild("codigoConviteCurto")
+            .equalTo(codigoConviteParam)
+            .get();
+
+          if(snap.exists()){
+            const dados = snap.val();
+            convidadoPor = Object.keys(dados)[0]; // pega UID real do patrocinador
           }
-          return database.ref("usuarios/"+uid).set(usuario);
-        })
-        .then(()=>{
-          alert("Conta criada com sucesso!");
-          window.location.href="tela.html";
-        })
-        .catch(err=>{
-          alert("Erro: "+err.message);
-        });
+        }
+
+        const usuario = {
+          nome: nome,
+          telefone: telefone9,
+          saldo: 0,
+          codigoConviteCurto: uid.substring(0,6),
+          convidadoPor: convidadoPor || null,
+          dataCadastro: new Date().toISOString()
+        };
+
+        await database.ref("usuarios/"+uid).set(usuario);
+
+        alert("Conta criada com sucesso!");
+        window.location.href="tela.html";
+
+      } catch(err){
+        alert("Erro: "+err.message);
+      }
     }
   </script>
 </body>
