@@ -100,9 +100,9 @@
       font-weight: 600;
       color: var(--text-light);
       text-decoration: none;
-      max-width: 220px;          /* limite do link */
+      max-width: 220px;          
       overflow: hidden;
-      text-overflow: ellipsis;   /* mostra "..." */
+      text-overflow: ellipsis;   
       white-space: nowrap;
       display: inline-block;
     }
@@ -262,6 +262,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyChrog4zZNoK8HTMl1MTMD43U7HHxBMtVw",
@@ -275,8 +276,9 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    const db = getDatabase(app);
 
-    onAuthStateChanged(auth, user => {
+    onAuthStateChanged(auth, async user => {
       if (!user) {
         alert("Sessão expirada. Faça login novamente.");
         window.location.href = "./index.html";
@@ -284,13 +286,61 @@
       }
 
       const uid = user.uid;
-      const conviteCurto = uid.slice(-6);
-      const link = `${window.location.origin}/I/login.index.html?ref=${conviteCurto}`;
 
+      // pega dados do usuário logado
+      const userRef = ref(db, "usuarios/" + uid);
+      const snap = await get(userRef);
+      if (!snap.exists()) return;
+      const userData = snap.val();
+
+      // Atualiza link de convite
+      const conviteCurto = userData.codigoConviteCurto || uid.slice(-6);
+      const link = `${window.location.origin}/index.html?ref=${conviteCurto}`;
       const linkElement = document.getElementById("linkConvite");
       linkElement.textContent = link;
       linkElement.href = link;
-      linkElement.title = link; // mostra link completo no hover
+      linkElement.title = link;
+
+      // Exibe comissão acumulada
+      document.getElementById("comissaoTotal").textContent = (userData.comissaoTotal || 0) + " Kz";
+
+      // buscar todos os usuários e filtrar os que foram convidados por mim
+      const dbRef = ref(db, "usuarios");
+      const allSnap = await get(dbRef);
+      if (!allSnap.exists()) return;
+      const allUsers = allSnap.val();
+
+      let convidados = [];
+      let i = 1;
+      for (const id in allUsers) {
+        if (allUsers[id].convidadoPor === uid) {
+          convidados.push({
+            index: i++,
+            nome: allUsers[id].nome,
+            telefone: allUsers[id].telefone,
+            saldo: allUsers[id].saldo || 0,
+            bonusGerado: (allUsers[id].saldo || 0) * 0.30 // nível 1 = 30%
+          });
+        }
+      }
+
+      // preencher tabela
+      const tbody = document.querySelector("#tabelaConvidados tbody");
+      tbody.innerHTML = "";
+      convidados.forEach(c => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${c.index}</td>
+          <td>${c.nome}</td>
+          <td>${c.telefone}</td>
+          <td>${c.saldo} Kz</td>
+          <td>${c.bonusGerado} Kz</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // quantidade de indicados
+      document.getElementById("total").textContent = convidados.length;
     });
 
     window.copiarLink = function () {
@@ -301,4 +351,4 @@
     };
   </script>
 </body>
-</html>
+  </html>
