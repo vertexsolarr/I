@@ -3,196 +3,97 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Rede Premium - VERTEX SOLAR</title>
+  <title>Minha Equipe - Smart Invest</title>
   <style>
-    :root {
-      --primary: #d4af37; /* dourado */
-      --bg: #0e0e0e; /* preto elegante */
-      --card-bg: #1a1a1a;
-      --text-light: #fff;
-      --text-muted: #cfcfcf;
-      --shadow: 0 6px 18px rgba(0,0,0,0.6);
-    }
-
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: var(--bg);
+      background: linear-gradient(to right, #e4fbe6, #ffffff);
       margin: 0;
       padding: 20px;
-      color: var(--text-light);
+      color: #222;
       animation: fadeIn 0.8s ease-in-out;
+    }
+
+    .logo {
+      display: block;
+      margin: 0 auto 10px auto;
+      max-width: 120px;
+      animation: zoomIn 0.5s ease;
     }
 
     h2 {
       text-align: center;
-      color: var(--primary);
+      color: #137c33;
+      margin-bottom: 10px;
+    }
+
+    #info {
+      text-align: center;
       margin-bottom: 20px;
-      font-size: 1.8rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-    }
-
-    .info-panel {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 25px;
-    }
-
-    .card {
-      background: var(--card-bg);
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: var(--shadow);
-      text-align: center;
-      border: 1px solid rgba(212, 175, 55, 0.3);
-    }
-
-    .card.unico {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      gap: 30px;
-      flex-wrap: wrap;
-    }
-
-    .card.unico .coluna {
-      flex: 1;
-      text-align: center;
-      min-width: 120px;
-    }
-
-    .card-title {
-      font-size: 14px;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-      letter-spacing: .5px;
-    }
-
-    .card-value {
-      font-size: 22px;
-      font-weight: bold;
-      color: var(--primary);
-    }
-
-    .convite-section {
-      text-align: center;
-      margin-bottom: 25px;
+      color: #444;
+      font-size: 17px;
     }
 
     .convite-box {
-      background-color: #1c1c1c;
-      padding: 10px 14px;
-      border-radius: 12px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: space-between;
-      word-break: break-word;
-      margin-top: 14px;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--primary);
-      color: var(--primary);
-      max-width: 100%;
-      gap: 10px;
-    }
-
-    #linkConvite {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-light);
-      text-decoration: none;
-      max-width: 220px;          /* limite do link */
-      overflow: hidden;
-      text-overflow: ellipsis;   /* mostra "..." */
-      white-space: nowrap;
+      background-color: #eaffea;
+      padding: 10px;
+      border-radius: 8px;
       display: inline-block;
-    }
-
-    #linkConvite:hover {
-      text-decoration: underline;
-      color: var(--primary);
+      font-weight: bold;
+      word-break: break-word;
+      margin-top: 10px;
     }
 
     .copy-btn {
-      padding: 6px 10px;
-      background: var(--primary);
-      color: #fff;
+      display: inline-block;
+      margin-top: 8px;
+      padding: 6px 12px;
+      background-color: #137c33;
+      color: white;
       border: none;
-      border-radius: 6px;
+      border-radius: 5px;
       cursor: pointer;
-      font-weight: 600;
-      transition: all 0.2s ease;
-      font-size: 12px;
-      line-height: 1;
-      white-space: nowrap;
-    }
-
-    .copy-btn:hover {
-      background: #b89528;
-      color: #fff;
+      font-weight: bold;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 15px;
-      background: var(--card-bg);
-      border-radius: 12px;
+      margin-top: 10px;
+      background: #fff;
+      border-radius: 8px;
       overflow: hidden;
-      box-shadow: var(--shadow);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       animation: slideUp 0.6s ease;
     }
 
     th, td {
-      padding: 14px 12px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
       text-align: center;
-      font-size: 14px;
     }
 
     th {
-      background-color: var(--primary);
-      color: #000;
-      font-weight: 600;
-      text-transform: uppercase;
-      font-size: 13px;
+      background-color: #137c33;
+      color: white;
     }
 
-    tr:hover td {
-      background-color: rgba(212, 175, 55, 0.08);
+    tr:hover {
+      background-color: #f1f1f1;
     }
 
-    .bonus-info {
-      margin-top: 35px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 20px;
+    .info-comissao {
+      margin-top: 20px;
       text-align: center;
-    }
-
-    .bonus-card {
-      background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
-      border: 1px solid rgba(212, 175, 55, 0.4);
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: var(--shadow);
-      transition: transform .3s;
-    }
-
-    .bonus-card:hover {
-      transform: translateY(-6px);
-      border-color: var(--primary);
-    }
-
-    .bonus-card h3 {
-      color: var(--primary);
-      margin-bottom: 10px;
-      font-size: 18px;
-    }
-
-    .bonus-card p {
-      color: var(--text-muted);
-      font-size: 14px;
-      line-height: 1.6;
+      font-size: 15px;
+      background-color: #ecfcec;
+      border-left: 4px solid #137c33;
+      padding: 10px 15px;
+      border-radius: 5px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      color: #2b2b2b;
     }
 
     @keyframes fadeIn {
@@ -204,31 +105,24 @@
       from {transform: translateY(20px); opacity: 0;}
       to {transform: translateY(0); opacity: 1;}
     }
+
+    @keyframes zoomIn {
+      from {transform: scale(0.8); opacity: 0;}
+      to {transform: scale(1); opacity: 1;}
+    }
   </style>
 </head>
 <body>
 
-  <h2>Rede Premium</h2>
+  <img src="logo.png" alt="Smart Invest" class="logo" />
 
-  <div class="info-panel">
-    <div class="card unico">
-      <div class="coluna">
-        <div class="card-title">Indicações Pessoais</div>
-        <div class="card-value" id="total">0</div>
-      </div>
-      <div class="coluna">
-        <div class="card-title">Bônus Acumulado</div>
-        <div class="card-value" id="comissaoTotal">0 Kz</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="convite-section">
-    <div>Seu link exclusivo:</div>
-    <div class="convite-box">
-      <a href="#" id="linkConvite" target="_blank" title="Carregando...">Carregando...</a>
-      <button class="copy-btn" onclick="copiarLink()">Copiar</button>
-    </div>
+  <h2>Convidados Diretos</h2>
+  <div id="info">
+    <div id="total">Total de convidados diretos: 0</div>
+    <div id="comissaoTotal">Comissão total: 0 Kz</div>
+    <div>Link de convite:</div>
+    <div class="convite-box" id="linkConvite">Carregando...</div><br/>
+    <button class="copy-btn" onclick="copiarLink()">Copiar link</button>
   </div>
 
   <table id="tabelaConvidados">
@@ -237,30 +131,22 @@
         <th>#</th>
         <th>Nome</th>
         <th>Telefone</th>
-        <th>Capital Aplicado</th>
-        <th>Bônus Gerado</th>
+        <th>Valor Investido</th>
+        <th>Comissão (32%)</th>
       </tr>
     </thead>
     <tbody></tbody>
   </table>
 
-  <div class="bonus-info">
-    <div class="bonus-card">
-      <h3>🔹 Nível 1</h3>
-      <p>Receba <strong>30%</strong> sobre cada aplicação feita pelos seus indicados diretos.</p>
-    </div>
-    <div class="bonus-card">
-      <h3>🔸 Nível 2</h3>
-      <p>Ganhe <strong>5%</strong> sobre os investimentos feitos pelos indicados dos seus convidados.</p>
-    </div>
-    <div class="bonus-card">
-      <h3>✨ Nível 3</h3>
-      <p>Receba ainda <strong>1%</strong> dos indicados indiretos, expandindo sua renda residual.</p>
-    </div>
+  <div class="info-comissao">
+    Para ganhar comissões, compartilhe seu link de convite com amigos. <br/>
+    Sempre que um convidado direto fizer um investimento, você ganha automaticamente <strong>32%</strong> do valor investido como comissão.<br/>
+    Convide mais pessoas para aumentar seus ganhos!
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, onValue, get, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
     const firebaseConfig = {
@@ -274,23 +160,81 @@
     };
 
     const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
     const auth = getAuth(app);
 
     onAuthStateChanged(auth, user => {
       if (!user) {
         alert("Sessão expirada. Faça login novamente.");
-        window.location.href = "./index.html";
+        window.location.href = "index.html";
         return;
       }
 
       const uid = user.uid;
-      const conviteCurto = uid.slice(-6);
-      const link = `${window.location.origin}/I/login.index.html?ref=${conviteCurto}`;
+      const conviteCurto = uid.slice(-6); // pega os últimos 6 caracteres do UID
+      const link = `${window.location.origin}/login.index.html?ref=${conviteCurto}`;
+      document.getElementById("linkConvite").textContent = link;
 
-      const linkElement = document.getElementById("linkConvite");
-      linkElement.textContent = link;
-      linkElement.href = link;
-      linkElement.title = link; // mostra link completo no hover
+      const usuariosRef = ref(db, "usuarios");
+      const tabela = document.querySelector("#tabelaConvidados tbody");
+      const totalDiv = document.getElementById("total");
+      const comissaoDiv = document.getElementById("comissaoTotal");
+
+      onValue(usuariosRef, snapshot => {
+        const dados = snapshot.val();
+        tabela.innerHTML = "";
+
+        let totalConvidados = 0;
+        let totalComissao = 0;
+        let index = 1;
+
+        Object.entries(dados).forEach(([uidConvidado, info]) => {
+          if (info.convidadoPor && info.convidadoPor.endsWith(conviteCurto)) {
+            totalConvidados++;
+
+            let valorInvestido = 0;
+            let comissaoIndividual = 0;
+
+            if (info.investimentos) {
+              Object.entries(info.investimentos).forEach(([idInvest, invest]) => {
+                const preco = parseInt(invest.preco || 0);
+                if (invest.status === "ativo") {
+                  valorInvestido += preco;
+                  const comissao = Math.floor(preco * 0.32);
+                  comissaoIndividual += comissao;
+
+                  if (!invest.comissaoPaga) {
+                    totalComissao += comissao;
+                    get(ref(db, `usuarios/${uid}/saldo`)).then(snap => {
+                      const saldoAtual = snap.exists() ? parseInt(snap.val()) : 0;
+                      update(ref(db, `usuarios/${uid}`), {
+                        saldo: saldoAtual + comissao
+                      });
+                    });
+                    update(ref(db, `usuarios/${uidConvidado}/investimentos/${idInvest}`), {
+                      comissaoPaga: true
+                    });
+                  } else {
+                    totalComissao += comissao;
+                  }
+                }
+              });
+            }
+
+            tabela.innerHTML += `
+              <tr>
+                <td>${index++}</td>
+                <td>${info.nome || "Sem nome"}</td>
+                <td>${info.telefone || "-"}</td>
+                <td>${valorInvestido} Kz</td>
+                <td>${comissaoIndividual} Kz</td>
+              </tr>`;
+          }
+        });
+
+        totalDiv.textContent = `Total de convidados diretos: ${totalConvidados}`;
+        comissaoDiv.textContent = `Comissão total: ${totalComissao} Kz`;
+      });
     });
 
     window.copiarLink = function () {
@@ -301,5 +245,4 @@
     };
   </script>
 </body>
-  </html>
-        
+</html>
