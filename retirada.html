@@ -55,12 +55,16 @@
       border-radius: 12px;
       cursor: pointer;
       text-align: center;
-      text-decoration: none;
       transition: 0.3s;
     }
 
     .registros-btn:hover {
       background: linear-gradient(90deg, #e6c200, #a98500);
+    }
+
+    .registros-btn:disabled {
+      background: gray;
+      cursor: not-allowed;
     }
 
     .saldo-box {
@@ -159,7 +163,6 @@
       font-size: 14px;
     }
 
-    /* Ajuste para telas pequenas */
     @media (max-width: 480px) {
       .container {
         padding: 20px;
@@ -172,7 +175,8 @@
   <div class="container">
     <h2>Saque</h2>
 
-    <a href="registros2.html" class="registros-btn">Histórico</a>
+    <!-- Botão Histórico -->
+    <button class="registros-btn" id="btnHistorico" onclick="abrirHistorico()">📜 Histórico</button>
 
     <div class="saldo-box">
       Quantia acessível: <strong id="saldo">A carregar...</strong>
@@ -270,7 +274,24 @@
       }
     });
 
-    function fazerRetirada() {
+    function abrirHistorico() {
+      const btn = document.getElementById("btnHistorico");
+      const textoOriginal = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = "⏳ Carregando...";
+      setTimeout(() => {
+        window.location.href = "registros2.html";
+        btn.disabled = false;
+        btn.innerHTML = textoOriginal;
+      }, 800);
+    }
+
+    async function fazerRetirada() {
+      const btn = document.getElementById("btnRetirar");
+      const textoOriginal = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = "⏳ Carregando...";
+
       const valor = parseFloat(document.getElementById("valor").value);
       const nib = document.getElementById("nib").value.trim();
       const titular = document.getElementById("titular").value.trim();
@@ -278,28 +299,36 @@
 
       if (isNaN(valor) || valor < 2000) {
         mensagemEl.innerText = "⚠️ Montante mínimo para saque é 2000 AOA.";
+        btn.disabled = false;
+        btn.innerHTML = textoOriginal;
         return;
       }
 
       if (valor > saldoAtual) {
         mensagemEl.innerText = "⚠️ Montante ultrapassa a quantia acessível.";
+        btn.disabled = false;
+        btn.innerHTML = textoOriginal;
         return;
       }
 
       if (!bancoSelecionado || !nib || !titular) {
         mensagemEl.innerText = "⚠️ Complete todos os campos bancários.";
+        btn.disabled = false;
+        btn.innerHTML = textoOriginal;
         return;
       }
 
-      const userRef = firebase.database().ref("usuarios/" + userId);
-      const novoSaldo = saldoAtual - valor;
+      try {
+        const userRef = firebase.database().ref("usuarios/" + userId);
+        const novoSaldo = saldoAtual - valor;
 
-      userRef.child("saldo").set(novoSaldo);
-      userRef.child("dadosBancarios").set({ banco: bancoSelecionado, nib, titular });
+        await userRef.child("saldo").set(novoSaldo);
+        await userRef.child("dadosBancarios").set({ banco: bancoSelecionado, nib, titular });
 
-      userRef.child("nome").once("value").then(nomeSnap => {
+        const nomeSnap = await userRef.child("nome").once("value");
         const nome = nomeSnap.val() || "Cliente";
-        firebase.database().ref("retiradas").push().set({
+
+        await firebase.database().ref("retiradas").push().set({
           userId,
           nome,
           saldoAnterior: saldoAtual,
@@ -310,9 +339,16 @@
           estado: "em análise",
           data: new Date().toISOString()
         });
+
         mensagemEl.innerText = "✅ Pedido de saque enviado com êxito!";
-      });
+      } catch (err) {
+        console.error(err);
+        mensagemEl.innerText = "❌ Erro ao processar saque. Tente novamente.";
+      }
+
+      btn.disabled = false;
+      btn.innerHTML = textoOriginal;
     }
   </script>
 </body>
-</html>
+  </html>
