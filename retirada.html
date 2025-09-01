@@ -43,14 +43,14 @@
       color: #ffd700;
     }
 
-    .registros-btn {
-      display: block;
-      margin: 0 auto 20px auto;
+    .registros-btn, .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
       padding: 10px 20px;
       font-weight: bold;
       font-size: 14px;
-      color: #111;
-      background: linear-gradient(90deg, #ffd700, #c79b00);
       border: none;
       border-radius: 12px;
       cursor: pointer;
@@ -58,12 +58,19 @@
       transition: 0.3s;
     }
 
+    .registros-btn {
+      margin: 0 auto 20px auto;
+      color: #111;
+      background: linear-gradient(90deg, #ffd700, #c79b00);
+    }
+
     .registros-btn:hover {
       background: linear-gradient(90deg, #e6c200, #a98500);
     }
 
-    .registros-btn:disabled {
-      background: gray;
+    .registros-btn:disabled,
+    .btn:disabled {
+      background: gray !important;
       cursor: not-allowed;
     }
 
@@ -131,22 +138,27 @@
       width: 100%;
       padding: 14px;
       background: linear-gradient(90deg, #ffd700, #c79b00);
-      border: none;
       border-radius: 14px;
-      font-weight: bold;
       font-size: 16px;
-      cursor: pointer;
       color: #111;
-      transition: 0.3s;
     }
 
     .btn:hover {
       background: linear-gradient(90deg, #e6c200, #a98500);
     }
 
-    .btn:disabled {
-      background: gray;
-      cursor: not-allowed;
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid #111;
+      border-top: 2px solid transparent;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
 
     .note {
@@ -274,23 +286,30 @@
       }
     });
 
+    function mostrarCarregando(btn, textoOriginal) {
+      btn.disabled = true;
+      btn.innerHTML = `<div class="spinner"></div> ${textoOriginal}`;
+    }
+
+    function resetarBotao(btn, textoOriginal) {
+      btn.disabled = false;
+      btn.innerHTML = textoOriginal;
+    }
+
     function abrirHistorico() {
       const btn = document.getElementById("btnHistorico");
-      const textoOriginal = btn.innerHTML;
-      btn.disabled = true;
-      btn.innerHTML = "⏳ Carregando...";
+      const textoOriginal = "📜 Histórico";
+      mostrarCarregando(btn, "Carregando...");
       setTimeout(() => {
         window.location.href = "registros2.html";
-        btn.disabled = false;
-        btn.innerHTML = textoOriginal;
+        resetarBotao(btn, textoOriginal);
       }, 800);
     }
 
     async function fazerRetirada() {
       const btn = document.getElementById("btnRetirar");
-      const textoOriginal = btn.innerHTML;
-      btn.disabled = true;
-      btn.innerHTML = "⏳ Carregando...";
+      const textoOriginal = "Validar Saque";
+      mostrarCarregando(btn, "Processando...");
 
       const valor = parseFloat(document.getElementById("valor").value);
       const nib = document.getElementById("nib").value.trim();
@@ -299,22 +318,19 @@
 
       if (isNaN(valor) || valor < 2000) {
         mensagemEl.innerText = "⚠️ Montante mínimo para saque é 2000 AOA.";
-        btn.disabled = false;
-        btn.innerHTML = textoOriginal;
+        resetarBotao(btn, textoOriginal);
         return;
       }
 
       if (valor > saldoAtual) {
         mensagemEl.innerText = "⚠️ Montante ultrapassa a quantia acessível.";
-        btn.disabled = false;
-        btn.innerHTML = textoOriginal;
+        resetarBotao(btn, textoOriginal);
         return;
       }
 
       if (!bancoSelecionado || !nib || !titular) {
         mensagemEl.innerText = "⚠️ Complete todos os campos bancários.";
-        btn.disabled = false;
-        btn.innerHTML = textoOriginal;
+        resetarBotao(btn, textoOriginal);
         return;
       }
 
@@ -346,9 +362,8 @@
         mensagemEl.innerText = "❌ Erro ao processar saque. Tente novamente.";
       }
 
-      btn.disabled = false;
-      btn.innerHTML = textoOriginal;
+      resetarBotao(btn, textoOriginal);
     }
   </script>
 </body>
-</html>
+  </html>
