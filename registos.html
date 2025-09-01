@@ -96,7 +96,6 @@
       border-color: #e63939;
     }
 
-    /* 🔹 Agora sempre duas colunas */
     .detalhes {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -134,15 +133,44 @@
       margin-top: 20px;
     }
 
+    .botoes {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    button {
+      padding: 10px 18px;
+      font-size: 14px;
+      border: none;
+      border-radius: 8px;
+      background: var(--dourado);
+      color: white;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .loading::after {
+      content: " ⏳ Carregando...";
+      font-size: 12px;
+      color: #333;
+    }
+
     @keyframes fadeIn {
       from {opacity:0; transform: translateY(10px);}
       to {opacity:1; transform: translateY(0);}
     }
 
-    /* Ajustes só para telas bem pequenas */
     @media (max-width: 350px) {
       .detalhes {
-        grid-template-columns: 1fr; /* 🔹 Se a tela for MUITO pequena, quebra em 1 coluna */
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -150,6 +178,12 @@
 <body>
 
   <h1>📥 Registos de Depósitos</h1>
+
+  <div class="botoes">
+    <button id="btnHistorico">📜 Histórico</button>
+    <button id="btnConfirmar">✅ Confirmar depósito</button>
+  </div>
+
   <div class="painel" id="listaDepositos"></div>
 
   <script>
@@ -180,6 +214,32 @@
       return d.toLocaleDateString("pt-PT", { day: "2-digit", month: "2-digit", year: "numeric" }) 
              + " " + d.toLocaleTimeString("pt-PT", { hour: "2-digit", minute: "2-digit" });
     }
+
+    function ativarLoading(botao, callback) {
+      botao.disabled = true;
+      botao.classList.add("loading");
+
+      // simulação de carregamento (pode trocar pela lógica real)
+      setTimeout(() => {
+        botao.disabled = false;
+        botao.classList.remove("loading");
+        callback();
+      }, 2000);
+    }
+
+    document.getElementById("btnHistorico").addEventListener("click", function() {
+      ativarLoading(this, () => {
+        alert("Abrindo histórico...");
+        // redirecionar ou carregar dados do histórico
+      });
+    });
+
+    document.getElementById("btnConfirmar").addEventListener("click", function() {
+      ativarLoading(this, () => {
+        alert("Depósito confirmado!");
+        // aqui pode adicionar lógica para salvar no Firebase
+      });
+    });
 
     auth.onAuthStateChanged(user => {
       if (!user) {
@@ -219,4 +279,4 @@
     });
   </script>
 </body>
-</html>
+  </html>
