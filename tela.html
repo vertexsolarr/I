@@ -406,7 +406,7 @@
         firebase.database().ref('usuarios/' + uid).once('value').then(snapshot => {
           const data = snapshot.val();
           if (data) {
-            document.getElementById('userName').innerText = "Olá, " + (data.nome || 'Usuário');
+            document.getElementById('userName').innerText = "" + (data.nome || 'Usuário');
             const saldo = Number(data.saldo || 0).toLocaleString('pt-AO', { minimumFractionDigits: 2 });
             document.getElementById('userSaldo').innerText = "Kz " + saldo;
           }
