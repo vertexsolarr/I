@@ -3,147 +3,270 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Minha Equipe</title>
+  <title>Minha Equipe - Smart Invest</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #e4fbe6, #ffffff);
+      background: linear-gradient(135deg, #fff8e1, #f6e27a);
       margin: 0;
       padding: 20px;
-      color: #222;
-      animation: fadeIn 0.8s ease-in-out;
+      color: #2b2b2b;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
     }
 
-    .logo {
-      display: block;
-      margin: 0 auto 10px auto;
-      max-width: 120px;
-      animation: zoomIn 0.5s ease;
+    .card-container {
+      background: #fff;
+      width: 100%;
+      max-width: 950px;
+      border-radius: 18px;
+      padding: 28px;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.15);
+      border: 2px solid #d4af37;
     }
 
-    h2 {
+    .card-container h2 {
       text-align: center;
-      color: #137c33;
-      margin-bottom: 10px;
+      color: #b8860b;
+      margin-bottom: 25px;
+      font-size: 28px;
+      font-weight: bold;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
     }
 
-    #info {
+    /* RESUMO EM CARD */
+    .resumo-card {
+      background: linear-gradient(145deg, #fffef9, #fff3c6);
+      border-radius: 16px;
+      padding: 25px;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      border: 1px solid #d4af37;
+    }
+
+    .resumo-card h3 {
       text-align: center;
       margin-bottom: 20px;
-      color: #444;
-      font-size: 17px;
+      color: #b8860b;
+      font-size: 22px;
+      font-weight: bold;
     }
 
+    .resumo-flex {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .resumo-flex div {
+      flex: 1 1 150px;
+      background: #fff;
+      border-radius: 12px;
+      padding: 14px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+      border: 1px solid #f0d879;
+    }
+
+    .resumo-flex div:hover { transform: translateY(-4px); }
+
+    .resumo-flex i {
+      font-size: 22px;
+      color: #d4af37;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .resumo-flex p {
+      margin: 0;
+      font-size: 13px;
+      color: #444;
+    }
+
+    .resumo-flex h3 {
+      margin: 6px 0 0;
+      font-size: 18px;
+      color: #000;
+      font-weight: bold;
+    }
+
+    /* LINK DE CONVITE */
+    .convite-section {
+      text-align: center;
+      margin-bottom: 25px;
+    }
     .convite-box {
-      background-color: #eaffea;
-      padding: 10px;
-      border-radius: 8px;
+      background-color: #fff9e6;
+      padding: 14px;
+      border-radius: 10px;
       display: inline-block;
+      font-size: 14px;
+      text-align: left;
+      width: 100%;
+      max-width: 500px;
+      border: 1px solid #d4af37;
+    }
+    .convite-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+    .convite-flex span {
+      flex: 1;
       font-weight: bold;
       word-break: break-word;
-      margin-top: 10px;
+      color: #6a4e0b;
     }
-
     .copy-btn {
-      display: inline-block;
-      margin-top: 8px;
       padding: 6px 12px;
-      background-color: #137c33;
-      color: white;
+      background: linear-gradient(135deg, #d4af37, #f6d365);
+      color: #fff;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
       cursor: pointer;
       font-weight: bold;
+      white-space: nowrap;
+      transition: all 0.3s;
     }
+    .copy-btn:hover { background: linear-gradient(135deg, #c09a2d, #f2c94c); }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-      background: #fff;
+    /* CARDS POR NÍVEL */
+    .nivel-card {
+      background: #fffdf7;
+      border-radius: 14px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+      padding: 15px;
+      border: 1px solid #f0d879;
+    }
+    .nivel-header {
+      font-weight: bold;
+      font-size: 16px;
+      margin-bottom: 12px;
+      color: #b8860b;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .convidado-item {
+      background: #fffaf0;
+      margin-bottom: 10px;
+      padding: 10px;
       border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      animation: slideUp 0.6s ease;
+      font-size: 14px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      border: 1px solid #f1e2a0;
     }
+    .convidado-item p {
+      margin: 3px 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #444;
+    }
+    .convidado-item i { color: #c09a2d; }
 
-    th, td {
-      padding: 12px;
-      border-bottom: 1px solid #ddd;
-      text-align: center;
-    }
-
-    th {
-      background-color: #137c33;
-      color: white;
-    }
-
-    tr:hover {
-      background-color: #f1f1f1;
-    }
+    /* CORES NÍVEIS */
+    .nivel-1 { border-left: 6px solid #d4af37; }
+    .nivel-2 { border-left: 6px solid #c9a227; }
+    .nivel-3 { border-left: 6px solid #b2951f; }
 
     .info-comissao {
-      margin-top: 20px;
+      margin-top: 25px;
       text-align: center;
       font-size: 15px;
-      background-color: #ecfcec;
-      border-left: 4px solid #137c33;
-      padding: 10px 15px;
-      border-radius: 5px;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
+      background: #fffbea;
+      border-left: 5px solid #d4af37;
+      padding: 14px 18px;
+      border-radius: 10px;
       color: #2b2b2b;
-    }
-
-    @keyframes fadeIn {
-      from {opacity: 0;}
-      to {opacity: 1;}
-    }
-
-    @keyframes slideUp {
-      from {transform: translateY(20px); opacity: 0;}
-      to {transform: translateY(0); opacity: 1;}
-    }
-
-    @keyframes zoomIn {
-      from {transform: scale(0.8); opacity: 0;}
-      to {transform: scale(1); opacity: 1;}
+      font-weight: 500;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.08);
     }
   </style>
 </head>
 <body>
 
-  <img src="logo.png" alt="Smart Invest" class="logo" />
+  <div class="card-container">
+    <h2><i class="fas fa-users"></i> Minha Equipe</h2>
 
-  <h2>Convidados Diretos</h2>
-  <div id="info">
-    <div id="total">Total de convidados diretos: 0</div>
-    <div id="comissaoTotal">Comissão total: 0 Kz</div>
-    <div>Link de convite:</div>
-    <div class="convite-box" id="linkConvite">Carregando...</div><br/>
-    <button class="copy-btn" onclick="copiarLink()">Copiar link</button>
+    <!-- RESUMO EM UM ÚNICO CARD -->
+    <div class="resumo-card">
+      <h3><i class="fas fa-chart-pie"></i> Resumo Geral</h3>
+      <div class="resumo-flex">
+        <div>
+          <i class="fas fa-user-friends"></i>
+          <p>Total convidados</p>
+          <h3 id="total">0</h3>
+        </div>
+        <div>
+          <i class="fas fa-coins"></i>
+          <p>Comissão total</p>
+          <h3 id="comissaoTotal">0 Kz</h3>
+        </div>
+        <div>
+          <i class="fas fa-level-up-alt"></i>
+          <p>Nível 1</p>
+          <h3 id="comissaoNivel1">0 Kz</h3>
+        </div>
+        <div>
+          <i class="fas fa-arrow-up"></i>
+          <p>Nível 2</p>
+          <h3 id="comissaoNivel2">0 Kz</h3>
+        </div>
+        <div>
+          <i class="fas fa-arrow-trend-up"></i>
+          <p>Nível 3</p>
+          <h3 id="comissaoNivel3">0 Kz</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- LINK CONVITE -->
+    <div class="convite-section">
+      <p><i class="fas fa-link"></i> Seu link de convite:</p>
+      <div class="convite-box">
+        <div class="convite-flex">
+          <span id="linkConvite">Carregando...</span>
+          <button class="copy-btn" onclick="copiarLink()">
+            <i class="fas fa-copy"></i> Copiar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARDS POR NÍVEL -->
+    <div id="nivel1" class="nivel-card nivel-1">
+      <div class="nivel-header"><i class="fas fa-sitemap"></i> Nível 1</div>
+      <div class="nivel-body"></div>
+    </div>
+
+    <div id="nivel2" class="nivel-card nivel-2">
+      <div class="nivel-header"><i class="fas fa-sitemap"></i> Nível 2</div>
+      <div class="nivel-body"></div>
+    </div>
+
+    <div id="nivel3" class="nivel-card nivel-3">
+      <div class="nivel-header"><i class="fas fa-sitemap"></i> Nível 3</div>
+      <div class="nivel-body"></div>
+    </div>
+
+    <!-- INFO COMISSÃO -->
+    <div class="info-comissao">
+      <p><strong><i class="fas fa-percentage"></i> Plano de Comissões:</strong></p>
+      <p>Nível 1 (diretos): 24%</p>
+      <p>Nível 2: 5%</p>
+      <p>Nível 3: 1%</p>
+    </div>
   </div>
 
-  <table id="tabelaConvidados">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Nome</th>
-        <th>Telefone</th>
-        <th>Valor Investido</th>
-        <th>Comissão (32%)</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-
-  <div class="info-comissao">
-    Para ganhar comissões, compartilhe seu link de convite com amigos. <br/>
-    Sempre que um convidado direto fizer um investimento, você ganha automaticamente <strong>32%</strong> do valor investido como comissão.<br/>
-    Convide mais pessoas para aumentar seus ganhos!
-  </div>
-
+  <!-- SCRIPT FIREBASE -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getDatabase, ref, onValue, get, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
@@ -163,6 +286,8 @@
     const db = getDatabase(app);
     const auth = getAuth(app);
 
+    const niveisComissao = {1: 0.24, 2: 0.05, 3: 0.01};
+
     onAuthStateChanged(auth, user => {
       if (!user) {
         alert("Sessão expirada. Faça login novamente.");
@@ -171,69 +296,96 @@
       }
 
       const uid = user.uid;
-      const conviteCurto = uid.slice(-6); // pega os últimos 6 caracteres do UID
+      const conviteCurto = uid.slice(-6); 
       const link = `${window.location.origin}/login.index.html?ref=${conviteCurto}`;
       document.getElementById("linkConvite").textContent = link;
 
       const usuariosRef = ref(db, "usuarios");
-      const tabela = document.querySelector("#tabelaConvidados tbody");
+
       const totalDiv = document.getElementById("total");
       const comissaoDiv = document.getElementById("comissaoTotal");
+      const comissaoN1Div = document.getElementById("comissaoNivel1");
+      const comissaoN2Div = document.getElementById("comissaoNivel2");
+      const comissaoN3Div = document.getElementById("comissaoNivel3");
 
       onValue(usuariosRef, snapshot => {
         const dados = snapshot.val();
-        tabela.innerHTML = "";
+
+        // limpar cada nível
+        document.querySelector("#nivel1 .nivel-body").innerHTML = "";
+        document.querySelector("#nivel2 .nivel-body").innerHTML = "";
+        document.querySelector("#nivel3 .nivel-body").innerHTML = "";
 
         let totalConvidados = 0;
         let totalComissao = 0;
-        let index = 1;
+        let comissaoNivel1 = 0;
+        let comissaoNivel2 = 0;
+        let comissaoNivel3 = 0;
 
-        Object.entries(dados).forEach(([uidConvidado, info]) => {
-          if (info.convidadoPor && info.convidadoPor.endsWith(conviteCurto)) {
-            totalConvidados++;
+        function listarConvidados(patrocinadorUid, nivel) {
+          if (nivel > 3) return;
 
-            let valorInvestido = 0;
-            let comissaoIndividual = 0;
+          Object.entries(dados).forEach(([uidConvidado, info]) => {
+            if (info.convidadoPor && info.convidadoPor.endsWith(patrocinadorUid.slice(-6))) {
+              totalConvidados++;
 
-            if (info.investimentos) {
-              Object.entries(info.investimentos).forEach(([idInvest, invest]) => {
-                const preco = parseInt(invest.preco || 0);
-                if (invest.status === "ativo") {
-                  valorInvestido += preco;
-                  const comissao = Math.floor(preco * 0.32);
-                  comissaoIndividual += comissao;
+              let valorInvestido = 0;
+              let comissaoIndividual = 0;
 
-                  if (!invest.comissaoPaga) {
-                    totalComissao += comissao;
-                    get(ref(db, `usuarios/${uid}/saldo`)).then(snap => {
-                      const saldoAtual = snap.exists() ? parseInt(snap.val()) : 0;
-                      update(ref(db, `usuarios/${uid}`), {
-                        saldo: saldoAtual + comissao
+              if (info.investimentos) {
+                Object.entries(info.investimentos).forEach(([idInvest, invest]) => {
+                  const preco = parseInt(invest.preco || 0);
+                  if (invest.status === "ativo") {
+                    valorInvestido += preco;
+                    const comissao = Math.floor(preco * niveisComissao[nivel]);
+                    comissaoIndividual += comissao;
+
+                    if (!invest[`comissaoPagaNivel${nivel}`]) {
+                      totalComissao += comissao;
+                      if (nivel === 1) comissaoNivel1 += comissao;
+                      if (nivel === 2) comissaoNivel2 += comissao;
+                      if (nivel === 3) comissaoNivel3 += comissao;
+
+                      get(ref(db, `usuarios/${user.uid}/saldo`)).then(snap => {
+                        const saldoAtual = snap.exists() ? parseInt(snap.val()) : 0;
+                        update(ref(db, `usuarios/${user.uid}`), {
+                          saldo: saldoAtual + comissao
+                        });
                       });
-                    });
-                    update(ref(db, `usuarios/${uidConvidado}/investimentos/${idInvest}`), {
-                      comissaoPaga: true
-                    });
-                  } else {
-                    totalComissao += comissao;
+                      update(ref(db, `usuarios/${uidConvidado}/investimentos/${idInvest}`), {
+                        [`comissaoPagaNivel${nivel}`]: true
+                      });
+                    } else {
+                      totalComissao += comissao;
+                      if (nivel === 1) comissaoNivel1 += comissao;
+                      if (nivel === 2) comissaoNivel2 += comissao;
+                      if (nivel === 3) comissaoNivel3 += comissao;
+                    }
                   }
-                }
-              });
+                });
+              }
+
+              const card = document.querySelector(`#nivel${nivel} .nivel-body`);
+              card.innerHTML += `
+                <div class="convidado-item">
+                  <p><i class="fas fa-user"></i> ${info.nome || "Sem nome"}</p>
+                  <p><i class="fas fa-phone"></i> ${info.telefone || "-"}</p>
+                  <p><i class="fas fa-wallet"></i> ${valorInvestido} Kz</p>
+                  <p><i class="fas fa-hand-holding-usd"></i> ${comissaoIndividual} Kz</p>
+                </div>`;
+
+              listarConvidados(uidConvidado, nivel + 1);
             }
+          });
+        }
 
-            tabela.innerHTML += `
-              <tr>
-                <td>${index++}</td>
-                <td>${info.nome || "Sem nome"}</td>
-                <td>${info.telefone || "-"}</td>
-                <td>${valorInvestido} Kz</td>
-                <td>${comissaoIndividual} Kz</td>
-              </tr>`;
-          }
-        });
+        listarConvidados(uid, 1);
 
-        totalDiv.textContent = `Total de convidados diretos: ${totalConvidados}`;
-        comissaoDiv.textContent = `Comissão total: ${totalComissao} Kz`;
+        totalDiv.textContent = totalConvidados;
+        comissaoDiv.textContent = `${totalComissao} Kz`;
+        comissaoN1Div.textContent = `${comissaoNivel1} Kz`;
+        comissaoN2Div.textContent = `${comissaoNivel2} Kz`;
+        comissaoN3Div.textContent = `${comissaoNivel3} Kz`;
       });
     });
 
@@ -245,4 +397,4 @@
     };
   </script>
 </body>
-</html>
+  </html>
