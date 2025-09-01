@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>VERTEX SOLAR- Cadastro</title>
+  <title>VERTEX SOLAR - Cadastro</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <style>
     :root{
@@ -70,10 +70,6 @@
     .entrada:focus{border-color: var(--dourado); background:#fff;}
     .entrada[readonly]{color:#444; font-weight:600;}
 
-    .sem-icone{
-      padding:14px 12px;
-    }
-
     .telefone-box{
       display:flex; 
       align-items:center;
@@ -98,7 +94,7 @@
     }
     .telefone-input:focus{border-color: var(--dourado); background:#fff;}
 
-    .botao{
+    .botao, .botao-azul{
       width:100%;
       padding:14px;
       border:none;
@@ -107,39 +103,29 @@
       font-size:16px;
       cursor:pointer;
       transition:0.25s;
-      background: var(--dourado);
-      color: var(--branco);
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:8px;
     }
+    .botao{ background: var(--dourado); color: var(--branco);}
     .botao:hover{background: var(--dourado-hover);}
-
-    .botao-azul{
-      width:100%;
-      padding:14px;
-      border:none;
-      border-radius:14px;
-      font-weight:800;
-      font-size:16px;
-      cursor:pointer;
-      transition:0.25s;
-      background: var(--azul);
-      color: var(--branco);
-    }
+    .botao-azul{ background: var(--azul); color: var(--branco);}
     .botao-azul:hover{background: var(--azul-hover);}
 
-    .botoes{
-      display:grid;
-      gap:12px;
-    }
+    .botoes{ display:grid; gap:12px; }
 
-    .login-link{
-      margin-top:14px;
-      text-align:center;
-      font-size:14px;
+    .spinner{
+      border: 3px solid rgba(255,255,255,0.3);
+      border-top: 3px solid #fff;
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      animation: spin 1s linear infinite;
     }
-    .login-link a{
-      color: var(--azul);
-      font-weight:700;
-      text-decoration:none;
+    @keyframes spin {
+      0%{transform:rotate(0deg);}
+      100%{transform:rotate(360deg);}
     }
   </style>
 </head>
@@ -175,7 +161,7 @@
 
       <div class="campo">
         <label for="senha">Chave de Acesso</label>
-        <input type="password" id="senha" class="entrada sem-icone" placeholder="Digite sua chave de acesso" required />
+        <input type="password" id="senha" class="entrada" placeholder="Digite sua chave de acesso" required />
       </div>
 
       <div class="campo">
@@ -184,8 +170,8 @@
       </div>
 
       <div class="botoes">
-        <button class="botao" onclick="registrar()">Cadastrar</button>
-        <a href="index.html"><button type="button" class="botao-azul">Já tenho conta</button></a>
+        <button id="btnCadastrar" class="botao" onclick="registrar()">Cadastrar</button>
+        <button id="btnLogin" type="button" class="botao-azul" onclick="irLogin()">Já tenho conta</button>
       </div>
 
     </div>
@@ -223,22 +209,35 @@
       }
     };
 
+    function setLoading(button, texto){
+      button.disabled = true;
+      button.innerHTML = '<div class="spinner"></div>' + texto;
+    }
+    function resetButton(button, texto){
+      button.disabled = false;
+      button.innerHTML = texto;
+    }
+
     function registrar(){
+      const btn = document.getElementById("btnCadastrar");
+      setLoading(btn,"Carregando...");
+
       const nome = document.getElementById("nome").value.trim();
       const telefone = document.getElementById("telefone").value.trim();
       const senha = document.getElementById("senha").value.trim();
 
       if(!nome || !telefone || !senha){
         alert("Preencha todos os campos.");
+        resetButton(btn,"Cadastrar");
         return;
       }
 
       if(telefone.length !== 9){
         alert("O telefone deve ter exatamente 9 dígitos.");
+        resetButton(btn,"Cadastrar");
         return;
       }
 
-      // Agora só salva os 9 dígitos no Firebase
       const telefone9 = telefone;
       const emailFalso = telefone9 + "@kerocapital.com"; 
 
@@ -247,7 +246,7 @@
           const uid = cred.user.uid;
           const usuario = {
             nome: nome,
-            telefone: telefone9, // <- apenas os 9 dígitos
+            telefone: telefone9,
             saldo: 0,
             codigoConviteCurto: uid.substring(0,6),
             dataCadastro: new Date().toISOString()
@@ -263,7 +262,14 @@
         })
         .catch(err=>{
           alert("Erro: "+err.message);
+          resetButton(btn,"Cadastrar");
         });
+    }
+
+    function irLogin(){
+      const btnLogin = document.getElementById("btnLogin");
+      setLoading(btnLogin,"Carregando...");
+      setTimeout(()=>{ window.location.href = "index.html"; }, 600);
     }
   </script>
 </body>
