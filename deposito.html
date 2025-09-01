@@ -241,6 +241,8 @@
     async function enviarComprovativo() {
       const btn = document.getElementById("btnEnviar");
       const textoOriginal = btn.innerHTML;
+
+      // 🔥 Mostra carregando imediatamente
       btn.disabled = true;
       btn.innerHTML = "⏳ Carregando...";
 
