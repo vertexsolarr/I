@@ -126,10 +126,15 @@
       text-align: center;
     }
     .suporte a{
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       color: var(--principal); 
       text-decoration: none; 
       font-weight: 700;
+      font-size: 15px;
     }
+    .suporte a i{ color: #25d366; font-size: 18px; }
 
     .mensagem-erro{
       color: red;
@@ -243,11 +248,13 @@
       </div>
 
       <div class="suporte">
-        <a href="#">Falar com o atendimento</a>
+        <a href="https://wa.me/244954994758" target="_blank">
+          <i class="fa-brands fa-whatsapp"></i> Falar com o atendimento
+        </a>
       </div>
 
       <div class="linha-botoes">
-        <button class="botao botao-claro" onclick="window.location.href='login.index.html'">Cadastrar</button>
+        <button id="botaoCadastrar" class="botao botao-claro">Cadastrar</button>
         <button class="botao botao-escuro" id="botaoAcessar">Acessar</button>
       </div>
 
@@ -272,8 +279,10 @@
     firebase.initializeApp(firebaseConfig);
 
     const botao = document.getElementById("botaoAcessar");
+    const botaoCadastrar = document.getElementById("botaoCadastrar");
     const msgErro = document.getElementById("mensagemErro");
 
+    // --- LOGIN ---
     function acessar() {
       msgErro.textContent = ""; 
       const tel = document.getElementById("telefone").value.replace(/\s+/g,'').trim();
@@ -312,6 +321,17 @@
     botao.addEventListener("click", acessar);
     document.addEventListener("keydown", (e)=>{ if(e.key==="Enter") acessar(); });
 
+    // --- CADASTRAR ---
+    function cadastrar() {
+      botaoCadastrar.disabled = true;
+      botaoCadastrar.textContent = "Carregando...";
+      setTimeout(()=>{
+        window.location.href = "login.index.html";
+      }, 1500);
+    }
+    botaoCadastrar.addEventListener("click", cadastrar);
+
+    // --- MOSTRAR/OCULTAR SENHA ---
     const alternarSenha = document.getElementById("alternarSenha");
     const entradaSenha  = document.getElementById("senha");
     alternarSenha.addEventListener("click", ()=>{
@@ -327,4 +347,4 @@
     window.onload = ()=>{ document.getElementById("modalAviso").style.display="flex"; };
   </script>
 </body>
-</html>
+  </html>
