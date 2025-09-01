@@ -1,275 +1,199 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Minha Equipe - Smart Invest</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minha Equipe-Vertex Solar</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #fff8e1, #f6e27a);
+      font-family: Arial, sans-serif;
+      background: #fffde7;
+      color: #5a3c00;
       margin: 0;
       padding: 20px;
-      color: #2b2b2b;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
     }
-
-    .card-container {
-      background: #fff;
-      width: 100%;
-      max-width: 950px;
-      border-radius: 18px;
-      padding: 28px;
-      box-shadow: 0 8px 22px rgba(0,0,0,0.15);
-      border: 2px solid #d4af37;
-    }
-
-    .card-container h2 {
+    h2 {
       text-align: center;
-      color: #b8860b;
-      margin-bottom: 25px;
-      font-size: 28px;
-      font-weight: bold;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-    }
-
-    /* RESUMO EM CARD */
-    .resumo-card {
-      background: linear-gradient(145deg, #fffef9, #fff3c6);
-      border-radius: 16px;
-      padding: 25px;
-      margin-bottom: 25px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      border: 1px solid #d4af37;
-    }
-
-    .resumo-card h3 {
-      text-align: center;
+      color: #5a3c00;
       margin-bottom: 20px;
-      color: #b8860b;
-      font-size: 22px;
-      font-weight: bold;
     }
-
-    .resumo-flex {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-
-    .resumo-flex div {
-      flex: 1 1 150px;
-      background: #fff;
-      border-radius: 12px;
-      padding: 14px;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-      transition: transform 0.3s;
-      border: 1px solid #f0d879;
-    }
-
-    .resumo-flex div:hover { transform: translateY(-4px); }
-
-    .resumo-flex i {
-      font-size: 22px;
-      color: #d4af37;
-      display: block;
-      margin-bottom: 6px;
-    }
-
-    .resumo-flex p {
-      margin: 0;
-      font-size: 13px;
-      color: #444;
-    }
-
-    .resumo-flex h3 {
-      margin: 6px 0 0;
-      font-size: 18px;
-      color: #000;
-      font-weight: bold;
-    }
-
-    /* LINK DE CONVITE */
-    .convite-section {
-      text-align: center;
-      margin-bottom: 25px;
-    }
-    .convite-box {
-      background-color: #fff9e6;
-      padding: 14px;
+    .resumo {
+      background: #fffef2;
       border-radius: 10px;
-      display: inline-block;
-      font-size: 14px;
-      text-align: left;
-      width: 100%;
-      max-width: 500px;
-      border: 1px solid #d4af37;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
-    .convite-flex {
+    .resumo h3 {
+      margin-bottom: 15px;
+      color: #5a3c00;
+    }
+    .resumo p {
+      margin: 5px 0;
+      font-size: 15px;
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      gap: 10px;
     }
-    .convite-flex span {
-      flex: 1;
-      font-weight: bold;
-      word-break: break-word;
-      color: #6a4e0b;
+    .convite {
+      margin: 20px 0;
     }
-    .copy-btn {
-      padding: 6px 12px;
-      background: linear-gradient(135deg, #d4af37, #f6d365);
-      color: #fff;
+    .convite input {
+      width: 80%;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #c9a227;
+    }
+    .convite button {
+      padding: 8px 14px;
       border: none;
-      border-radius: 8px;
+      border-radius: 6px;
+      background: #d4af37;
+      color: #fff;
       cursor: pointer;
-      font-weight: bold;
-      white-space: nowrap;
-      transition: all 0.3s;
     }
-    .copy-btn:hover { background: linear-gradient(135deg, #c09a2d, #f2c94c); }
-
-    /* CARDS POR NÍVEL */
     .nivel-card {
-      background: #fffdf7;
-      border-radius: 14px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-      margin-bottom: 20px;
-      padding: 15px;
+      background: #fffef7;
+      border-radius: 10px;
       border: 1px solid #f0d879;
+      padding: 12px;
+      margin: 10px 0;
     }
-    .nivel-header {
-      font-weight: bold;
+    .nivel-card h4 {
+      margin: 0 0 8px 0;
       font-size: 16px;
-      margin-bottom: 12px;
-      color: #b8860b;
+      color: #5a3c00;
+    }
+    .convidado-item {
+      background: #fffaf0;
+      margin: 6px 0;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #f1e2a0;
+      font-size: 14px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: #fffef2;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #f1e2a0;
+      font-size: 14px;
+    }
+    th {
+      background: #f0d879; /* amarelo claro */
+      color: #5a3c00;      /* marrom */
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
+    .verde {
+      color: #d4af37; /* dourado em vez de verde */
       display: flex;
       align-items: center;
       gap: 8px;
     }
-    .convidado-item {
-      background: #fffaf0;
-      margin-bottom: 10px;
-      padding: 10px;
-      border-radius: 8px;
-      font-size: 14px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-      border: 1px solid #f1e2a0;
-    }
-    .convidado-item p {
-      margin: 3px 0;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      color: #444;
-    }
-    .convidado-item i { color: #c09a2d; }
-
-    /* CORES NÍVEIS */
-    .nivel-1 { border-left: 6px solid #d4af37; }
-    .nivel-2 { border-left: 6px solid #c9a227; }
-    .nivel-3 { border-left: 6px solid #b2951f; }
-
-    .info-comissao {
-      margin-top: 25px;
-      text-align: center;
-      font-size: 15px;
-      background: #fffbea;
-      border-left: 5px solid #d4af37;
-      padding: 14px 18px;
-      border-radius: 10px;
-      color: #2b2b2b;
-      font-weight: 500;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+    .verde img {
+      height: 28px;
+      vertical-align: middle;
     }
   </style>
 </head>
 <body>
+  <h2><i class="fas fa-users"></i> Minha Equipe</h2>
 
-  <div class="card-container">
-    <h2><i class="fas fa-users"></i> Minha Equipe</h2>
-
-    <!-- RESUMO EM UM ÚNICO CARD -->
-    <div class="resumo-card">
-      <h3><i class="fas fa-chart-pie"></i> Resumo Geral</h3>
-      <div class="resumo-flex">
-        <div>
-          <i class="fas fa-user-friends"></i>
-          <p>Total convidados</p>
-          <h3 id="total">0</h3>
-        </div>
-        <div>
-          <i class="fas fa-coins"></i>
-          <p>Comissão total</p>
-          <h3 id="comissaoTotal">0 Kz</h3>
-        </div>
-        <div>
-          <i class="fas fa-level-up-alt"></i>
-          <p>Nível 1</p>
-          <h3 id="comissaoNivel1">0 Kz</h3>
-        </div>
-        <div>
-          <i class="fas fa-arrow-up"></i>
-          <p>Nível 2</p>
-          <h3 id="comissaoNivel2">0 Kz</h3>
-        </div>
-        <div>
-          <i class="fas fa-arrow-trend-up"></i>
-          <p>Nível 3</p>
-          <h3 id="comissaoNivel3">0 Kz</h3>
-        </div>
-      </div>
-    </div>
-
-    <!-- LINK CONVITE -->
-    <div class="convite-section">
-      <p><i class="fas fa-link"></i> Seu link de convite:</p>
-      <div class="convite-box">
-        <div class="convite-flex">
-          <span id="linkConvite">Carregando...</span>
-          <button class="copy-btn" onclick="copiarLink()">
-            <i class="fas fa-copy"></i> Copiar
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- CARDS POR NÍVEL -->
-    <div id="nivel1" class="nivel-card nivel-1">
-      <div class="nivel-header"><i class="fas fa-sitemap"></i> Nível 1</div>
-      <div class="nivel-body"></div>
-    </div>
-
-    <div id="nivel2" class="nivel-card nivel-2">
-      <div class="nivel-header"><i class="fas fa-sitemap"></i> Nível 2</div>
-      <div class="nivel-body"></div>
-    </div>
-
-    <div id="nivel3" class="nivel-card nivel-3">
-      <div class="nivel-header"><i class="fas fa-sitemap"></i> Nível 3</div>
-      <div class="nivel-body"></div>
-    </div>
-
-    <!-- INFO COMISSÃO -->
-    <div class="info-comissao">
-      <p><strong><i class="fas fa-percentage"></i> Plano de Comissões:</strong></p>
-      <p>Nível 1 (diretos): 24%</p>
-      <p>Nível 2: 5%</p>
-      <p>Nível 3: 1%</p>
-    </div>
+  <div class="resumo">
+    <h3><i class="fas fa-chart-pie"></i> Resumo Geral</h3>
+    <p>Total convidados <span id="total">0</span></p>
+    <p>Comissão total <span id="comissaoTotal">0 Kz</span></p>
+    <p>Nível 1 <span id="comissaoNivel1">0 Kz</span></p>
+    <p>Nível 2 <span id="comissaoNivel2">0 Kz</span></p>
+    <p>Nível 3 <span id="comissaoNivel3">0 Kz</span></p>
   </div>
 
-  <!-- SCRIPT FIREBASE -->
+  <div class="convite">
+    <p><i class="fas fa-link"></i> Seu link de convite:</p>
+    <input type="text" id="linkConvite" readonly value="Carregando...">
+    <button onclick="copiarLink()">Copiar</button>
+  </div>
+
+  <!-- LISTAGEM DE NÍVEIS -->
+  <div id="nivel1" class="nivel-card">
+    <h4><i class="fas fa-sitemap"></i> Nível 1</h4>
+    <div class="nivel-body"></div>
+  </div>
+  <div id="nivel2" class="nivel-card">
+    <h4><i class="fas fa-sitemap"></i> Nível 2</h4>
+    <div class="nivel-body"></div>
+  </div>
+  <div id="nivel3" class="nivel-card">
+    <h4><i class="fas fa-sitemap"></i> Nível 3</h4>
+    <div class="nivel-body"></div>
+  </div>
+
+  <!-- TÍTULO COM LOGO -->
+  <h3 class="verde">
+    <img src="topo.png" alt="VERTEX SOLAR">
+    Tabela de Planos – VERTEX SOLAR
+  </h3>
+
+  <!-- TABELA -->
+  <table>
+    <tr>
+      <th>PRODUTO</th>
+      <th>PREÇO</th>
+      <th>RENDA DIÁRIA</th>
+      <th>RENDA TOTAL</th>
+      <th>DIAS</th>
+    </tr>
+    <tr>
+      <td>Plano Solar Essencial</td>
+      <td>7.000 KZ</td>
+      <td>2.000 KZ</td>
+      <td>9.000 KZ</td>
+      <td>1 Dia</td>
+    </tr>
+    <tr>
+      <td>Acordo Fotovoltaico</td>
+      <td>5.000 KZ</td>
+      <td>1.290 KZ</td>
+      <td>40.000 KZ</td>
+      <td>31 Dias</td>
+    </tr>
+    <tr>
+      <td>Raio Solar</td>
+      <td>10.000 KZ</td>
+      <td>2.580 KZ</td>
+      <td>80.000 KZ</td>
+      <td>31 Dias</td>
+    </tr>
+    <tr>
+      <td>Solar Max</td>
+      <td>20.000 KZ</td>
+      <td>5.160 KZ</td>
+      <td>160.000 KZ</td>
+      <td>31 Dias</td>
+    </tr>
+    <tr>
+      <td>Vertex Solar Premium </td>
+      <td>40.000 KZ</td>
+      <td>10.320 KZ</td>
+      <td>320.000 KZ</td>
+      <td>31 Dias</td>
+    </tr>
+  </table>
+
+  <!-- FIREBASE -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getDatabase, ref, onValue, get, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
     const firebaseConfig = {
@@ -298,7 +222,7 @@
       const uid = user.uid;
       const conviteCurto = uid.slice(-6); 
       const link = `${window.location.origin}/login.index.html?ref=${conviteCurto}`;
-      document.getElementById("linkConvite").textContent = link;
+      document.getElementById("linkConvite").value = link;
 
       const usuariosRef = ref(db, "usuarios");
 
@@ -308,13 +232,15 @@
       const comissaoN2Div = document.getElementById("comissaoNivel2");
       const comissaoN3Div = document.getElementById("comissaoNivel3");
 
+      const nivel1Body = document.querySelector("#nivel1 .nivel-body");
+      const nivel2Body = document.querySelector("#nivel2 .nivel-body");
+      const nivel3Body = document.querySelector("#nivel3 .nivel-body");
+
       onValue(usuariosRef, snapshot => {
         const dados = snapshot.val();
-
-        // limpar cada nível
-        document.querySelector("#nivel1 .nivel-body").innerHTML = "";
-        document.querySelector("#nivel2 .nivel-body").innerHTML = "";
-        document.querySelector("#nivel3 .nivel-body").innerHTML = "";
+        nivel1Body.innerHTML = "";
+        nivel2Body.innerHTML = "";
+        nivel3Body.innerHTML = "";
 
         let totalConvidados = 0;
         let totalComissao = 0;
@@ -324,56 +250,30 @@
 
         function listarConvidados(patrocinadorUid, nivel) {
           if (nivel > 3) return;
-
           Object.entries(dados).forEach(([uidConvidado, info]) => {
             if (info.convidadoPor && info.convidadoPor.endsWith(patrocinadorUid.slice(-6))) {
               totalConvidados++;
-
-              let valorInvestido = 0;
               let comissaoIndividual = 0;
-
               if (info.investimentos) {
-                Object.entries(info.investimentos).forEach(([idInvest, invest]) => {
-                  const preco = parseInt(invest.preco || 0);
+                Object.values(info.investimentos).forEach(invest => {
                   if (invest.status === "ativo") {
-                    valorInvestido += preco;
+                    const preco = parseInt(invest.preco || 0);
                     const comissao = Math.floor(preco * niveisComissao[nivel]);
                     comissaoIndividual += comissao;
-
-                    if (!invest[`comissaoPagaNivel${nivel}`]) {
-                      totalComissao += comissao;
-                      if (nivel === 1) comissaoNivel1 += comissao;
-                      if (nivel === 2) comissaoNivel2 += comissao;
-                      if (nivel === 3) comissaoNivel3 += comissao;
-
-                      get(ref(db, `usuarios/${user.uid}/saldo`)).then(snap => {
-                        const saldoAtual = snap.exists() ? parseInt(snap.val()) : 0;
-                        update(ref(db, `usuarios/${user.uid}`), {
-                          saldo: saldoAtual + comissao
-                        });
-                      });
-                      update(ref(db, `usuarios/${uidConvidado}/investimentos/${idInvest}`), {
-                        [`comissaoPagaNivel${nivel}`]: true
-                      });
-                    } else {
-                      totalComissao += comissao;
-                      if (nivel === 1) comissaoNivel1 += comissao;
-                      if (nivel === 2) comissaoNivel2 += comissao;
-                      if (nivel === 3) comissaoNivel3 += comissao;
-                    }
+                    totalComissao += comissao;
+                    if (nivel === 1) comissaoNivel1 += comissao;
+                    if (nivel === 2) comissaoNivel2 += comissao;
+                    if (nivel === 3) comissaoNivel3 += comissao;
                   }
                 });
               }
-
               const card = document.querySelector(`#nivel${nivel} .nivel-body`);
               card.innerHTML += `
                 <div class="convidado-item">
-                  <p><i class="fas fa-user"></i> ${info.nome || "Sem nome"}</p>
-                  <p><i class="fas fa-phone"></i> ${info.telefone || "-"}</p>
-                  <p><i class="fas fa-wallet"></i> ${valorInvestido} Kz</p>
-                  <p><i class="fas fa-hand-holding-usd"></i> ${comissaoIndividual} Kz</p>
-                </div>`;
-
+                  <strong>${info.nome || "Sem nome"}</strong><br>
+                  Comissão: ${comissaoIndividual} Kz
+                </div>
+              `;
               listarConvidados(uidConvidado, nivel + 1);
             }
           });
@@ -390,11 +290,11 @@
     });
 
     window.copiarLink = function () {
-      const texto = document.getElementById("linkConvite").textContent;
+      const texto = document.getElementById("linkConvite").value;
       navigator.clipboard.writeText(texto).then(() => {
         alert("Link copiado com sucesso!");
       });
     };
   </script>
 </body>
-  </html>
+      </html>
