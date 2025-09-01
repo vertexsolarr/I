@@ -70,7 +70,7 @@
       padding: 15px;
       margin-bottom: 20px;
       border-radius: 10px;
-      word-break: break-word; /* evita estourar no celular */
+      word-break: break-word;
     }
 
     .info-box strong {
@@ -139,7 +139,6 @@
       font-size: 14px;
     }
 
-    /* Ajuste extra para telas pequenas */
     @media (max-width: 480px) {
       .container {
         padding: 20px;
@@ -153,7 +152,7 @@
     <h2>Depósito via Referência</h2>
 
     <!-- Botão Registos -->
-    <button class="btn" style="margin-bottom: 20px;" onclick="abrirRegistos()">📜 Registos</button>
+    <button class="btn" id="btnRegistos" style="margin-bottom: 20px;" onclick="abrirRegistos()">📜 Registos</button>
 
     <div class="info-box">
       <strong>Entidade:</strong> 10116 <br>
@@ -211,7 +210,16 @@
     });
 
     function abrirRegistos() {
-      window.location.href = "registos.html";
+      const btn = document.getElementById("btnRegistos");
+      const textoOriginal = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = "⏳ Carregando...";
+
+      setTimeout(() => {
+        window.location.href = "registos.html";
+        btn.disabled = false;
+        btn.innerHTML = textoOriginal;
+      }, 800);
     }
 
     function mostrarPreview(event) {
@@ -231,6 +239,11 @@
     }
 
     async function enviarComprovativo() {
+      const btn = document.getElementById("btnEnviar");
+      const textoOriginal = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = "⏳ Carregando...";
+
       const user = firebase.auth().currentUser;
       const valor = parseFloat(document.getElementById("valor").value);
       const comprovativo = document.getElementById("comprovativo").files[0];
@@ -238,11 +251,15 @@
 
       if (!valor || valor < 5000) {
         mensagemEl.innerText = "Digite um valor válido (mínimo 5000 AOA).";
+        btn.disabled = false;
+        btn.innerHTML = textoOriginal;
         return;
       }
 
       if (!comprovativo) {
         mensagemEl.innerText = "Por favor, selecione o comprovativo (imagem).";
+        btn.disabled = false;
+        btn.innerHTML = textoOriginal;
         return;
       }
 
@@ -270,11 +287,13 @@
         document.getElementById("valor").value = "";
         document.getElementById("comprovativo").value = "";
         document.getElementById("preview").innerHTML = "";
-
       } catch (err) {
         console.error(err);
         mensagemEl.innerText = "❌ Erro ao enviar comprovativo. Tente novamente.";
       }
+
+      btn.disabled = false;
+      btn.innerHTML = textoOriginal;
     }
   </script>
 </body>
